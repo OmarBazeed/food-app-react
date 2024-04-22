@@ -1,0 +1,29 @@
+.auth-container {
+  background: url(./assets/imgs/background.png);
+  background-size: cover;
+}
+.bg-overlay {
+  background: linear-gradient(rgba(47, 140, 96, 0.63), rgba(0, 0, 0, 0.62));
+}
+.login-content {
+  width: 746px;
+  height: 561px;
+}
+.formIn {
+  background-color: rgba(247, 247, 247, 1);
+  position: relative;
+}
+
+.formIn input:focus {
+  box-shadow: none !important;
+}
+
+.formIn::after {
+  position: absolute;
+  top: 10px;
+  left: 53px;
+  height: 75%;
+  width: 2px;
+  background: #c6c7c8;
+  content: "";
+}
