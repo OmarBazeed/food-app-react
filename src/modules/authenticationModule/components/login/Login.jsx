@@ -1,32 +1,56 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../../../assets/imgs/logo.png";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import "animate.css";
+import { useState } from "react";
+import { Bars } from "react-loader-spinner";
+import {
+  FailToast,
+  SuccessToast,
+} from "../../../sharedModule/components/toasts/Toast";
 
 const Login = () => {
+  const [clicked, setClicked] = useState(false);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      let res = await axios.post(
+        "https://upskilling-egypt.com:3006/api/v1/Users/Login",
+        data
+      );
+      localStorage.setItem("token", res.data.token);
+      setClicked(true);
+      SuccessToast("Logged In Successfully");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
+    } catch (error) {
+      FailToast(error?.response?.error?.message);
+    }
   };
   return (
     <div className="auth-container">
       <div className="bg-overlay vh-100">
         <div className="d-flex align-items-center justify-content-center vh-100">
-          <div className="login-content bg-white border border-2 rounded-2 p-4 my-3">
+          <div className="login-content bg-white border border-2 rounded-2 p-3 my-2">
             <div>
-              <div className="text-center mx-auto mb-3">
+              <div className="text-center mx-auto mb-1">
                 <img src={Logo} alt="logo" />
               </div>
-              <h2>Login</h2>
+              <h2 className="loginHead fw-bold fs-2 fa">Login</h2>
               <p className="text-muted">
                 Welcome Back! Please enter your details
               </p>
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
               <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
                 <i className="fa-regular fa-envelope fa-2x me-1"></i>
                 <input
@@ -34,31 +58,46 @@ const Login = () => {
                   className="form-control bg-transparent border-0 ms-2"
                   placeholder="Enter Your Email"
                   {...register("email", {
-                    required: "Email Is Required",
-                    pattern: /^[w]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                    required: "Email is required",
+                    pattern: /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/i,
                   })}
+                  defaultValue="omarbazeed@gmail.com"
                 />
-                <p className="text-danger">{errors?.email}</p>
               </div>
+              {errors?.email && (
+                <p className="text-white handleErr fw-bold p-2">
+                  Email Is Required
+                </p>
+              )}
               <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
                 <i className="fa-solid fa-lock fa-2x me-1"></i>
                 <input
-                  type="text"
+                  type="password"
                   className="form-control bg-transparent border-0 ms-2"
                   placeholder="Enter Your Password"
-                  {...register("email", { required: "Password Is Required" })}
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
+                  defaultValue="Omar0109585@"
                 />
               </div>
-              <div className="mt-5">
+
+              {errors?.password && (
+                <p className="text-white handleErr fw-bold p-2">
+                  Password Is Required
+                </p>
+              )}
+
+              <div className="mt-3">
                 <div className="d-flex align-items-center justify-content-between my-4">
                   <NavLink
-                    className="text-decoration-none text-secondary fs-6"
+                    className="text-decoration-none text-secondary fs-6 fw-bold"
                     to="/register"
                   >
                     Registr Now ?
                   </NavLink>
                   <NavLink
-                    className="text-decoration-none text-secondary fs-6"
+                    className="text-decoration-none text-secondary fs-6 fw-bold text-success"
                     to="/forgetpass"
                   >
                     Forget Password!
@@ -66,10 +105,26 @@ const Login = () => {
                 </div>
                 <div className="w-100 mt-4">
                   <button
-                    className="btn btn-success w-100 fw-bold text-white fs-5"
+                    className={
+                      clicked
+                        ? "btn btn-transparent w-100 fw-bold text-white fs-5 submitBtn"
+                        : "btn btn-success w-100 fw-bold text-white fs-5 submitBtn"
+                    }
                     type="submit"
                   >
-                    Login
+                    {clicked == true ? (
+                      <Bars
+                        height="80"
+                        width="80"
+                        color="#4fa94d"
+                        ariaLabel="bars-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
+                    ) : (
+                      "Submit"
+                    )}
                   </button>
                 </div>
               </div>

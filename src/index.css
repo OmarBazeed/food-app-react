@@ -7,8 +7,9 @@
 }
 .login-content {
   width: 746px;
-  height: 561px;
+  height: 570px;
 }
+
 .formIn {
   background-color: rgba(247, 247, 247, 1);
   position: relative;
@@ -20,10 +21,23 @@
 
 .formIn::after {
   position: absolute;
-  top: 10px;
+  top: 7px;
   left: 53px;
   height: 75%;
   width: 2px;
   background: #c6c7c8;
   content: "";
+}
+.handleErr {
+  background-color: hsl(9, 83%, 52%);
+  border-radius: 10px;
+  filter: drop-shadow(2px 2px 2px gray);
+  animation: headShake 1s 2 ease-in-out alternate;
+}
+.loginHead {
+  animation: zoomInDown 1.5s 1 ease-in-out alternate;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.submitBtn svg {
+  margin: auto;
 }

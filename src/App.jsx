@@ -12,6 +12,12 @@ import RecipesList from "./modules/recipesModule/components/recipesList/RecipesL
 import ForgetPass from "./modules/authenticationModule/components/forgetPass/ForgetPass";
 import ResetPass from "./modules/authenticationModule/components/resetPass/ResetPass";
 import Dashboard from "./modules/sharedModule/components/dashboard/Dashboard";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import GuardedRoute from "./modules/sharedModule/components/guardedRoute/GuardedRoute";
+import { jwtDecode } from "jwt-decode";
+
+const loginData = jwtDecode(localStorage.getItem("token"));
 
 const routes = createBrowserRouter([
   {
@@ -43,7 +49,11 @@ const routes = createBrowserRouter([
   },
   {
     path: "dashboard",
-    element: <MasterLayout />,
+    element: (
+      <GuardedRoute loginData={loginData}>
+        <MasterLayout />
+      </GuardedRoute>
+    ),
     errorElement: <NotFound />,
     children: [
       { index: true, element: <Dashboard /> },
@@ -66,6 +76,7 @@ const routes = createBrowserRouter([
 function App() {
   return (
     <>
+      <ToastContainer />
       <RouterProvider router={routes} />
     </>
   );
