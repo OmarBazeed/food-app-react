@@ -26,21 +26,27 @@ const Login = () => {
         "https://upskilling-egypt.com:3006/api/v1/Users/Login",
         data
       );
-      localStorage.setItem("token", res.data.token);
+      res.data.token && localStorage.setItem("token", res.data.token);
       setClicked(true);
       SuccessToast("Logged In Successfully");
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);
     } catch (error) {
-      FailToast(error?.response?.error?.message);
+      FailToast(error.response.data.message);
     }
   };
   return (
     <div className="auth-container">
       <div className="bg-overlay vh-100">
         <div className="d-flex align-items-center justify-content-center vh-100">
-          <div className="login-content bg-white border border-2 rounded-2 p-3 my-2">
+          <div
+            className={
+              errors?.email || errors?.password
+                ? "login-contentError bg-white border border-2 rounded-2 p-4 my-2 "
+                : "login-content bg-white border border-2 rounded-2 p-4 my-2"
+            }
+          >
             <div>
               <div className="text-center mx-auto mb-1">
                 <img src={Logo} alt="logo" />
@@ -114,8 +120,8 @@ const Login = () => {
                   >
                     {clicked == true ? (
                       <Bars
-                        height="80"
-                        width="80"
+                        height="40"
+                        width="40"
                         color="#4fa94d"
                         ariaLabel="bars-loading"
                         wrapperStyle={{}}

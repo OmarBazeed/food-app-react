@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
+
 const Dashboard = () => {
+  const navigate = useNavigate();
   const handleLogOut = () => {
-    console.log("first");
     localStorage.removeItem("token");
+    navigate("/");
   };
   return (
     <div>

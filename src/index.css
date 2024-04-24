@@ -7,9 +7,28 @@
 }
 .login-content {
   width: 746px;
+  height: 500px;
+}
+.login-contentError {
+  width: 746px;
   height: 570px;
 }
-
+.login-contentForget {
+  width: 746px;
+  height: 470px;
+}
+.login-contentForgetError {
+  width: 746px;
+  height: 520px;
+}
+.login-contentReset {
+  width: 746px;
+  height: 570px;
+}
+.login-contentResetError {
+  width: 746px;
+  height: 730px;
+}
 .formIn {
   background-color: rgba(247, 247, 247, 1);
   position: relative;

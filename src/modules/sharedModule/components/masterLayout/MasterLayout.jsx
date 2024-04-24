@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import { Outlet } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import Sidebar from "../sidebar/Sidebar";
 import Header from "../header/Header";
 
-const MasterLayout = () => {
+const MasterLayout = ({ loginData }) => {
   return (
     <div className="container">
       <div className="row">
@@ -11,7 +12,7 @@ const MasterLayout = () => {
           <Sidebar />
         </div>
         <div className="col-md-9">
-          <Navbar />
+          <Navbar loginData={loginData} />
           <Header />
           <Outlet />
         </div>

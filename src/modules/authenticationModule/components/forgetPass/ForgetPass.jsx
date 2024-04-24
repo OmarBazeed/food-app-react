@@ -25,9 +25,8 @@ const ForgetPass = () => {
         "https://upskilling-egypt.com:3006/api/v1/Users/Reset/Request",
         data
       );
-      localStorage.setItem("token", res.data.token);
       setClicked(true);
-      SuccessToast("You Are Redirecting to Reset Password");
+      SuccessToast(res.data.message);
       setTimeout(() => {
         navigate("/resetpass");
       }, 2000);
@@ -39,7 +38,13 @@ const ForgetPass = () => {
     <div className="auth-container">
       <div className="bg-overlay vh-100">
         <div className="d-flex align-items-center justify-content-center vh-100">
-          <div className="login-content bg-white border border-2 rounded-2 p-5 my-5">
+          <div
+            className={
+              errors?.email
+                ? ".login-contentForgetError  bg-white border border-2 rounded-2 p-5 my-5"
+                : "login-contentForget bg-white border border-2 rounded-2 p-5 my-5"
+            }
+          >
             <div>
               <div className="text-center mx-auto mb-3">
                 <img src={Logo} alt="logo" />
