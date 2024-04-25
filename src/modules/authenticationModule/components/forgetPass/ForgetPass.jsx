@@ -8,6 +8,7 @@ import {
 } from "../../../sharedModule/components/toasts/Toast";
 import { useForm } from "react-hook-form";
 import { DNA } from "react-loader-spinner";
+import { mainURL } from "../../../../utils";
 
 const ForgetPass = () => {
   const [clicked, setClicked] = useState(false);
@@ -21,10 +22,7 @@ const ForgetPass = () => {
 
   const onSubmit = async (data) => {
     try {
-      let res = await axios.post(
-        "https://upskilling-egypt.com:3006/api/v1/Users/Reset/Request",
-        data
-      );
+      let res = await axios.post(`${mainURL}/Users/Reset/Request`, data);
       setClicked(true);
       SuccessToast(res.data.message);
       setTimeout(() => {

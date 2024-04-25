@@ -1,3 +1,4 @@
+/*Authentication Styling ==>[ Loign , Forget , Reset ]*/
 .auth-container {
   background: url(./assets/imgs/background.png);
   background-size: cover;
@@ -59,4 +60,65 @@
 }
 .submitBtn svg {
   margin: auto;
+}
+
+/*SideBar*/
+
+.sidebar-content .ps-sidebar-container {
+  height: 100vh;
+  background-color: rgba(31, 38, 62, 1);
+  color: white;
+  font-weight: bold;
+  border-top-right-radius: 50px;
+}
+.sidebar-content .ps-sidebar-container {
+  background-color: rgba(31, 38, 62, 1);
+  color: white;
+  font-weight: bold;
+}
+.sidebar-content ul li:first-of-type a:hover {
+  background-color: transparent !important;
+}
+.sidebar-content ul li:not(:first-of-type) a {
+  transition: all 0.5s;
+}
+.sidebar-content ul li:not(:first-of-type) a:hover {
+  background-color: rgb(0 67 49) !important;
+  box-shadow: -2px 0px 2px 2px #343a40;
+  transform: scale(1.05);
+}
+/*navbar*/
+.avatarImg {
+  width: 50px;
+  height: 50px;
+}
+.searchNav {
+  width: 85% !important;
+}
+.notificationIcon {
+  position: relative;
+}
+.notificationIcon ::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 3px;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: tomato;
+}
+/*Header*/
+.header-content {
+  background-image: url(./assets/imgs/header-bg-svg.svg);
+  background-size: cover;
+}
+/*Not Found*/
+.notFound-content {
+  background-image: url(./assets/imgs/not-found-bg.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.notFound-content div {
+  margin-top: -50px;
 }

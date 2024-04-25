@@ -1,19 +1,17 @@
 /* eslint-disable react/prop-types */
 import { Outlet } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
-import Sidebar from "../sidebar/Sidebar";
-import Header from "../header/Header";
+import SideBar from "../sidebar/SideBar";
 
 const MasterLayout = ({ loginData }) => {
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-md-3">
-          <Sidebar />
+    <div className="container-fluid">
+      <div className="d-flex justify-content-start">
+        <div className="">
+          <SideBar />
         </div>
-        <div className="col-md-9">
+        <div className="w-100">
           <Navbar loginData={loginData} />
-          <Header />
           <Outlet />
         </div>
       </div>

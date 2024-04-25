@@ -9,6 +9,7 @@ import {
   FailToast,
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
+import { mainURL } from "../../../../utils";
 
 const Login = () => {
   const [clicked, setClicked] = useState(false);
@@ -22,10 +23,7 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      let res = await axios.post(
-        "https://upskilling-egypt.com:3006/api/v1/Users/Login",
-        data
-      );
+      let res = await axios.post(`${mainURL}/Users/Login`, data);
       res.data.token && localStorage.setItem("token", res.data.token);
       setClicked(true);
       SuccessToast("Logged In Successfully");

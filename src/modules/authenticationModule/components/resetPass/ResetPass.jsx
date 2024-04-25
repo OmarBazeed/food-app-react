@@ -1,14 +1,15 @@
+import axios from "axios";
 import { useState } from "react";
+import Confetti from "react-confetti";
 import { useForm } from "react-hook-form";
+import { InfinitySpin } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
+import Logo from "../../../../assets/imgs/logo.png";
 import {
   FailToast,
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
-import axios from "axios";
-import Logo from "../../../../assets/imgs/logo.png";
-import { InfinitySpin } from "react-loader-spinner";
-import Confetti from "react-confetti";
+import { mainURL } from "../../../../utils";
 
 const ResetPass = () => {
   const [clicked, setClicked] = useState(false);
@@ -23,11 +24,7 @@ const ResetPass = () => {
 
   const onSubmit = async (data) => {
     try {
-      let res = await axios.post(
-        "https://upskilling-egypt.com:3006/api/v1/Users/Reset",
-        data
-      );
-      console.log(res);
+      let res = await axios.post(`${mainURL}/Users/Reset`, data);
       setClicked(true);
       setCelebrate(true);
       SuccessToast(res.data.message);
