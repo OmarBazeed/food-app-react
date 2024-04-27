@@ -92,6 +92,7 @@ const ForgetPass = () => {
                       ariaLabel="dna-loading"
                       wrapperStyle={{}}
                       wrapperClass="dna-wrapper"
+                      className="mb-3"
                     />
                   ) : (
                     "Submit"

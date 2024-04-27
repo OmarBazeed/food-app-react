@@ -16,7 +16,7 @@
 }
 .login-contentForget {
   width: 746px;
-  height: 470px;
+  height: 490px;
 }
 .login-contentForgetError {
   width: 746px;
@@ -118,7 +118,36 @@
   background-image: url(./assets/imgs/not-found-bg.png);
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: bottom;
 }
 .notFound-content div {
   margin-top: -50px;
+}
+
+/*dashboard*/
+.redirect,
+.recipe-details {
+  margin: auto;
+  width: 95%;
+  margin-left: 2%;
+  background-color: rgba(240, 255, 239, 1);
+}
+.redirect button {
+  width: 223px !important;
+  height: 48px;
+}
+
+/*recipes*/
+.tableHead {
+  background-color: rgba(226, 229, 235, 1) !important;
+}
+.priceInput {
+  position: relative;
+}
+.priceInput::after {
+  position: absolute;
+  content: "EGP";
+  top: 7px;
+  right: 7px;
+  font-weight: bold;
 }
