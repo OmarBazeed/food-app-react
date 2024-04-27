@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Outlet } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
-import SideBar from "../sidebar/Sidebar";
+import SideBar from "../sidebar/SideBar";
 
 const MasterLayout = ({ loginData }) => {
   return (
