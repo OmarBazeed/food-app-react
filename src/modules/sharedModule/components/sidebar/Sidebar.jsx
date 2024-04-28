@@ -1,10 +1,16 @@
-import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
-import { sidebarContent } from "../../../../utils";
 import { useState } from "react";
+import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import sideLogo from "../../../../assets/imgs/sideLogo.png";
+import { sidebarContent } from "../../../../utils";
+import { useNavigate } from "react-router-dom";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
   return (
     <>
       <div className="sidebar-content">
@@ -23,6 +29,9 @@ const SideBar = () => {
                   component={ele.path}
                   icon={ele.icon}
                   className="my-2"
+                  onClick={() => {
+                    ele.title === "Logout" && handleLogOut();
+                  }}
                 >
                   {ele.title}
                 </MenuItem>

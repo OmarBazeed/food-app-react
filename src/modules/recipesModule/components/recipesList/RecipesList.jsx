@@ -7,10 +7,15 @@ import { mainURL } from "../../../../utils";
 import DeleteModal from "../../../sharedModule/components/popUpModal/DeleteModal";
 import NoData from "../../../sharedModule/components/noData/NoData";
 import AddRecipe from "../AddRecipe";
+import UpdateRecipe from "./UpdateRecipe";
 const RecipesList = () => {
   const [recipes, setRecipes] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
   const [addBtnClicked, setaAddBtnClicked] = useState(false);
+  const [updateBtnClicked, setUpdateBtnClicked] = useState(false);
+
+  const [UpdatedRecipe, setUpdatedRecipe] = useState({});
 
   const token = localStorage.getItem("token");
   const [id, setId] = useState("");
@@ -32,19 +37,26 @@ const RecipesList = () => {
 
   return (
     <>
-      {openDeleteModal ? (
+      {openDeleteModal && (
         <DeleteModal
-          getAllRecipes={getAllRecipes()}
+          getAllRecipes={getAllRecipes}
           id={id}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
         />
-      ) : (
-        ""
       )}
 
       {addBtnClicked ? (
-        <AddRecipe setaAddBtnClicked={setaAddBtnClicked} />
+        <AddRecipe
+          setaAddBtnClicked={setaAddBtnClicked}
+          getAllRecipes={getAllRecipes}
+        />
+      ) : updateBtnClicked ? (
+        <UpdateRecipe
+          setUpdateBtnClicked={setUpdateBtnClicked}
+          UpdatedRecipe={UpdatedRecipe}
+          getAllRecipes={getAllRecipes}
+        />
       ) : (
         <div className="d-flex align-items-start flex-column w-100">
           <Header
@@ -69,10 +81,7 @@ const RecipesList = () => {
 
           <div className="w-100 p-4">
             <Table hover>
-              <thead
-                className="tableHead"
-                style={{ background: "rgba(226, 229, 235, 1)" }}
-              >
+              <thead style={{ backgroundColor: "blue" }}>
                 <tr>
                   <th>Item Name</th>
                   <th>Image</th>
@@ -86,6 +95,7 @@ const RecipesList = () => {
               <tbody>
                 {recipes.length > 0 ? (
                   recipes.map((ele) => {
+                    console.log(ele);
                     return (
                       <tr key={ele?.id}>
                         <td>{ele?.name}</td>
@@ -105,8 +115,19 @@ const RecipesList = () => {
                         <td>{ele?.tag.name}</td>
                         <td>{ele?.category[0]?.name}</td>
                         <td>
-                          <i className="me-3 fa-regular fa-eye text-warning"></i>
-                          <i className="me-3 fa-solid fa-pen-to-square text-primary"></i>
+                          <i
+                            className="me-3 fa-regular fa-eye text-warning"
+                            type="button"
+                          ></i>
+                          <i
+                            className="me-3 fa-solid fa-pen-to-square text-primary"
+                            onClick={() => {
+                              setUpdateBtnClicked(true);
+                              setId(ele.id);
+                              setUpdatedRecipe(ele);
+                            }}
+                            type="button"
+                          ></i>
                           <i
                             className="me-3 fa-solid fa-trash text-danger"
                             type="button"

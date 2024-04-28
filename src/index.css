@@ -123,7 +123,13 @@
 .notFound-content div {
   margin-top: -50px;
 }
-
+/*
+matserLayout
+*/
+.masterLayout {
+  padding-left: 0 !important;
+  overflow-x: hidden;
+}
 /*dashboard*/
 .redirect,
 .recipe-details {

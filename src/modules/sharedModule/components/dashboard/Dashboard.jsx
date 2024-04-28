@@ -1,12 +1,7 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import Header from "../header/Header";
+import { NavLink } from "react-router-dom";
 import homeImg from "../../../../assets/imgs/home-avatar.svg";
+import Header from "../header/Header";
 const Dashboard = () => {
-  const navigate = useNavigate();
-  const handleLogOut = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
   return (
     <div className="container-fluid">
       <Header
@@ -36,10 +31,6 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
-
-      <button className="btn btn-danger" onClick={() => handleLogOut()}>
-        logout
-      </button>
     </div>
   );
 };

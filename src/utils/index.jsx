@@ -34,7 +34,7 @@ export const sidebarContent = [
   },
   {
     icon: <i className="fa-solid fa-arrow-right-from-bracket"></i>,
-    path: <NavLink to="/resetpass" />,
+    path: "",
     title: "Logout",
     id: 6,
   },

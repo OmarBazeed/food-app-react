@@ -4,7 +4,7 @@ import avatar from "../../../../assets/imgs/avatar.png";
 /* eslint-disable react/prop-types */
 const Navbar = ({ loginData }) => {
   return (
-    <nav className="navbar navbar-expand-lg bg-light w-100">
+    <nav className="navbar navbar-expand-lg bg-light w-100 ms-3 pe-2">
       <div className="container-fluid">
         <button
           className="navbar-toggler"

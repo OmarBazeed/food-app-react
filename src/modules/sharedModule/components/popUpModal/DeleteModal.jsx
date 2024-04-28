@@ -4,7 +4,7 @@ import PopUpImag from "../../../../assets/imgs/no-data.png";
 import { mainURL } from "../../../../utils";
 
 import { Button, Modal } from "react-bootstrap";
-import { FailToast } from "../toasts/Toast";
+import { FailToast, SuccessToast } from "../toasts/Toast";
 
 const DeleteModal = ({
   getAllRecipes,
@@ -16,7 +16,9 @@ const DeleteModal = ({
 
   const handleDelte = async (id) => {
     try {
-      await axios.delete(`${mainURL}/Recipe/${id}`);
+      let res = await axios.delete(`${mainURL}/Recipe/${id}`);
+      console.log(res);
+      SuccessToast(res.data.message || "You Deleted This Recipe Successfully");
       getAllRecipes();
     } catch (error) {
       FailToast(error.response.data.message);

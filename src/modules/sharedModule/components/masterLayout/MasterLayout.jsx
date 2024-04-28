@@ -5,7 +5,7 @@ import SideBar from "../sidebar/SideBar";
 
 const MasterLayout = ({ loginData }) => {
   return (
-    <div className="container-fluid">
+    <div className="container-fluid masterLayout">
       <div className="d-flex justify-content-start">
         <div className="">
           <SideBar />

@@ -1,24 +1,29 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
-import { mainURL } from "../../../utils";
+
+import { mainURL } from "../../../../utils";
 import {
   FailToast,
   SuccessToast,
-} from "../../sharedModule/components/toasts/Toast";
+} from "../../../sharedModule/components/toasts/Toast";
 
-const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
+const UpdateRecipe = ({
+  setUpdateBtnClicked,
+  UpdatedRecipe: { id, name, tag, price, description },
+  getAllRecipes,
+}) => {
   const token = localStorage.getItem("token");
 
   const handleCancel = () => {
-    setaAddBtnClicked(false);
+    setUpdateBtnClicked(false);
   };
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm();
 
   const onSubmit = async (data) => {
@@ -31,14 +36,14 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
       formData.append("description", data.description);
       formData.append("recipeImage", data.recipeImage[0]);
 
-      let res = await axios.post(`${mainURL}/Recipe/`, formData, {
+      let res = await axios.put(`${mainURL}/Recipe/${+id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
-      SuccessToast(res.data.message);
-      reset();
+      SuccessToast("You Updated This Recipe Successfully");
+      handleCancel();
       getAllRecipes();
     } catch (error) {
       FailToast(error.response.data.message);
@@ -62,7 +67,7 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
             <NavLink
               to="/dashboard/recipes"
               className="text-light text-decoration-none"
-              onClick={() => setaAddBtnClicked(false)}
+              onClick={() => setUpdateBtnClicked(false)}
             >
               Fill Recipes <i className="fa-solid fa-arrow-right-long ms-2"></i>
             </NavLink>
@@ -80,6 +85,7 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
               {...register("name", {
                 required: "Name Is Required",
               })}
+              defaultValue={name}
             />
           </div>
           {errors?.name && (
@@ -92,6 +98,7 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
               {...register("tagId", {
                 required: "TagId Is Required",
               })}
+              defaultValue={tag.id}
             >
               <option selected>Tag</option>
               <option value="1">One</option>
@@ -111,6 +118,7 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
               {...register("price", {
                 required: "Price Is Required",
               })}
+              defaultValue={price}
             />
           </div>
           {errors?.price && (
@@ -145,6 +153,7 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
               {...register("description", {
                 required: "Description Is Required",
               })}
+              defaultValue={description}
             ></textarea>
             <label htmlFor="floatingTextarea">
               description <span className="text-danger">*</span>
@@ -186,4 +195,4 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
   );
 };
 
-export default AddRecipe;
+export default UpdateRecipe;
