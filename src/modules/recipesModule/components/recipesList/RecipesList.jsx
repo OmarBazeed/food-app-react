@@ -79,9 +79,9 @@ const RecipesList = () => {
             </div>
           </div>
 
-          <div className="w-100 p-4">
+          <div className="w-100 p-4 m-auto">
             <Table hover>
-              <thead style={{ backgroundColor: "blue" }}>
+              <thead>
                 <tr>
                   <th>Item Name</th>
                   <th>Image</th>
@@ -95,7 +95,6 @@ const RecipesList = () => {
               <tbody>
                 {recipes.length > 0 ? (
                   recipes.map((ele) => {
-                    console.log(ele);
                     return (
                       <tr key={ele?.id}>
                         <td>{ele?.name}</td>
@@ -143,7 +142,7 @@ const RecipesList = () => {
                     );
                   })
                 ) : (
-                  <div className="w-100 m-auto text-center">
+                  <div className="w-100 m-auto text-center ms-">
                     <NoData />
                   </div>
                 )}
