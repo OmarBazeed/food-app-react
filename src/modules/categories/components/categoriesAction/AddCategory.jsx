@@ -20,12 +20,10 @@ const AddCategory = ({
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       let res = await axios.post(`${mainURL}/Category/`, data, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      console.log(res);
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"
       );

@@ -21,7 +21,6 @@ const UpdateCategory = ({
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       let res = await axios.put(
         `${mainURL}/Category/${updatedCategory.id}`,
@@ -30,7 +29,7 @@ const UpdateCategory = ({
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-      console.log(res);
+
       SuccessToast(
         res.data.message || "You Updated This Category Successfully"
       );
