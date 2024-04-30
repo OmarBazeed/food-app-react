@@ -7,9 +7,29 @@ import {
   FailToast,
   SuccessToast,
 } from "../../sharedModule/components/toasts/Toast";
+import { useEffect, useState } from "react";
 
 const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
   const token = localStorage.getItem("token");
+  const [tagsList, setTagsList] = useState([]);
+  const [categoriesList, setCategories] = useState([]);
+
+  const getAllTags = async () => {
+    try {
+      let res = await axios.get(`${mainURL}/tag/`);
+      setTagsList(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAllCategories = async () => {
+    try {
+      let res = await axios.get(`${mainURL}/tag/`);
+      setTagsList(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleCancel = () => {
     setaAddBtnClicked(false);
@@ -44,7 +64,9 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
       FailToast(error.response.data.message);
     }
   };
-
+  useEffect(() => {
+    getAllTags();
+  }, []);
   return (
     <div className="p-3 d-flex flex-column align-items-start justify-content-center">
       <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3">
@@ -93,10 +115,17 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
                 required: "TagId Is Required",
               })}
             >
-              <option selected>Tag</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
+              {/* {tagsList?.length > 0 &&
+                tagsList.map((tag) => {
+                  return (
+                    <option key={tag.id} value={tag.name}>
+                      {tag.name}
+                    </option>
+                  );
+                })} */}
+              <option>680</option>
+              <option>690</option>
+              <option>800</option>
             </select>
           </div>
           {errors?.tagId && (
@@ -122,20 +151,30 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
             <label className="" htmlFor="catogery">
               Category
             </label>
-            <input
-              type="text"
-              className="form-control"
-              id="catogery"
+            <select
+              className="form-select"
+              aria-label="Default select example"
               {...register("categoriesIds", {
-                required: "CategoriesId Is Required",
+                required: "CategoriesIds Is Required",
               })}
-            />
+              id="catogery"
+            >
+              {tagsList?.length > 0 &&
+                tagsList.map((tag) => {
+                  return (
+                    <option key={tag.id} value={tag.name}>
+                      {tag.name}
+                    </option>
+                  );
+                })}
+            </select>
+            {errors?.categoriesIds && (
+              <p className="text-white handleErr fw-bold p-2">
+                CategoriesId Is Required
+              </p>
+            )}
           </div>
-          {errors?.categoriesIds && (
-            <p className="text-white handleErr fw-bold p-2">
-              CategoriesId Is Required
-            </p>
-          )}
+
           <div className="form-floating">
             <textarea
               className="form-control"

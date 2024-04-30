@@ -30,6 +30,10 @@
   width: 746px;
   height: 730px;
 }
+
+.register-content {
+  width: 770px;
+}
 .formIn {
   background-color: rgba(247, 247, 247, 1);
   position: relative;

@@ -28,7 +28,7 @@ export const sidebarContent = [
   },
   {
     icon: <i className="fa-solid fa-key"></i>,
-    path: <NavLink to="/resetpass" />,
+    path: "",
     title: "Change Password",
     id: 5,
   },

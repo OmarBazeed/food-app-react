@@ -1,17 +1,17 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Logo from "../../../../assets/imgs/logo.png";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import "animate.css";
 import { useState } from "react";
 import { Bars } from "react-loader-spinner";
+import { mainURL } from "../../../../utils";
 import {
   FailToast,
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
-import { mainURL } from "../../../../utils";
 
-const Login = () => {
+const VerifyAccount = () => {
   const [clicked, setClicked] = useState(false);
   const navigate = useNavigate();
 
@@ -23,12 +23,9 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      let res = await axios.post(`${mainURL}/Users/Login`, data);
-      res.data.token && localStorage.setItem("token", res.data.token);
-
+      let res = await axios.put(`${mainURL}/Users/verify`, data);
       setClicked(true);
-      SuccessToast("Logged In Successfully");
-      checkingUserRole();
+      SuccessToast(res.data.message);
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);
@@ -36,20 +33,6 @@ const Login = () => {
       FailToast(error.response.data.message);
     }
   };
-
-  const checkingUserRole = async () => {
-    try {
-      let res = await axios.get(`${mainURL}/Users/currentUser`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      localStorage.setItem("LoggedUserInfo", JSON.stringify(res.data));
-    } catch (error) {
-      FailToast(error.response.data.message);
-    }
-  };
-
   return (
     <div className="auth-container">
       <div className="bg-overlay vh-100">
@@ -65,10 +48,8 @@ const Login = () => {
               <div className="text-center mx-auto mb-1">
                 <img src={Logo} alt="logo" />
               </div>
-              <h2 className="loginHead fw-bold fs-2 fa">Login</h2>
-              <p className="text-muted">
-                Welcome Back! Please enter your details
-              </p>
+              <h2 className="loginHead fw-bold fs-2 fa">Verify Account</h2>
+              <p className="text-muted">Verify your account To Login</p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
               <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
@@ -81,7 +62,6 @@ const Login = () => {
                     required: "Email is required",
                     pattern: /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/i,
                   })}
-                  defaultValue="omarbazeed@gmail.com"
                 />
               </div>
               {errors?.email && (
@@ -92,43 +72,27 @@ const Login = () => {
               <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
                 <i className="fa-solid fa-lock fa-2x me-1"></i>
                 <input
-                  type="password"
+                  type="text"
                   className="form-control bg-transparent border-0 ms-2"
-                  placeholder="Enter Your Password"
-                  {...register("password", {
-                    required: "Password is required",
+                  placeholder="Enter Your OTP"
+                  {...register("code", {
+                    required: "code is required",
                   })}
-                  defaultValue="Omar0109585@"
                 />
               </div>
-
-              {errors?.password && (
+              {errors?.code && (
                 <p className="text-white handleErr fw-bold p-2">
-                  Password Is Required
+                  {errors.code.message}
                 </p>
               )}
 
               <div className="mt-3">
-                <div className="d-flex align-items-center justify-content-between my-4">
-                  <NavLink
-                    className="text-decoration-none text-secondary fs-6 fw-bold"
-                    to="/register"
-                  >
-                    Registr Now ?
-                  </NavLink>
-                  <NavLink
-                    className="text-decoration-none text-secondary fs-6 fw-bold text-success"
-                    to="/forgetpass"
-                  >
-                    Forget Password!
-                  </NavLink>
-                </div>
                 <div className="w-100 mt-4">
                   <button
                     className={
                       clicked
-                        ? "btn btn-transparent w-100 fw-bold text-white fs-5 submitBtn"
-                        : "btn btn-success w-100 fw-bold text-white fs-5 submitBtn"
+                        ? "btn btn-transparent w-100 fw-bold text-white fs-5 submitBtn mt-3"
+                        : "btn btn-success w-100 fw-bold text-white fs-5 submitBtn mt-3"
                     }
                     type="submit"
                   >
@@ -143,7 +107,7 @@ const Login = () => {
                         visible={true}
                       />
                     ) : (
-                      "Submit"
+                      "Verify"
                     )}
                   </button>
                 </div>
@@ -156,4 +120,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default VerifyAccount;

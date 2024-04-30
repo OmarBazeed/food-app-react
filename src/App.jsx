@@ -10,6 +10,7 @@ import Userslist from "./modules/usersModule/components/usersList/Userslist";
 import RecipesList from "./modules/recipesModule/components/recipesList/RecipesList";
 import ForgetPass from "./modules/authenticationModule/components/forgetPass/ForgetPass";
 import ResetPass from "./modules/authenticationModule/components/resetPass/ResetPass";
+import VerifyAccount from "./modules/authenticationModule/components/verifyAccount/VerifyAccount";
 import Dashboard from "./modules/sharedModule/components/dashboard/Dashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -57,6 +58,10 @@ function App() {
         {
           path: "resetpass",
           element: <ResetPass />,
+        },
+        {
+          path: "verifyAccount",
+          element: <VerifyAccount />,
         },
       ],
     },

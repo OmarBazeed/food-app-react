@@ -3,16 +3,50 @@ import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import sideLogo from "../../../../assets/imgs/sideLogo.png";
 import { sidebarContent } from "../../../../utils";
 import { useNavigate } from "react-router-dom";
+import ChangePass from "../../../authenticationModule/components/changePass/ChangePass";
 
-const SideBar = () => {
+const MySideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [openChangeModal, setOpenChangeModal] = useState(false);
   const navigate = useNavigate();
+  const loggedUserInfo = JSON.parse(localStorage.getItem("LoggedUserInfo"));
+  console.log(loggedUserInfo);
+
+  const showingSidebarElements = (ele) => {
+    if (loggedUserInfo.group.name === "SystemUser") {
+      if (
+        ele.title === "Home" ||
+        ele.title === "Recipes" ||
+        ele.title === "Favorites"
+      ) {
+        return "d-block";
+      } else {
+        return "d-none";
+      }
+    }
+  };
+
   const handleLogOut = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
+
+  const clickingOnSidebarElements = (ele) => {
+    if (ele.title == "Logout") {
+      handleLogOut();
+    } else if (ele.title == "Change Password") {
+      setOpenChangeModal(true);
+    }
+  };
   return (
     <>
+      {openChangeModal && (
+        <ChangePass
+          openChangeModal={openChangeModal}
+          setOpenChangeModal={setOpenChangeModal}
+        />
+      )}
+
       <div className="sidebar-content">
         <Sidebar collapsed={collapsed}>
           <Menu>
@@ -28,10 +62,8 @@ const SideBar = () => {
                   key={ele.id}
                   component={ele.path}
                   icon={ele.icon}
-                  className="my-2"
-                  onClick={() => {
-                    ele.title === "Logout" && handleLogOut();
-                  }}
+                  className={showingSidebarElements(ele)}
+                  onClick={() => clickingOnSidebarElements(ele)}
                 >
                   {ele.title}
                 </MenuItem>
@@ -44,4 +76,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default MySideBar;
