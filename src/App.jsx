@@ -1,38 +1,24 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AuthLayout from "./modules/sharedModule/components/authLayout/AuthLayout";
-import MasterLayout from "./modules/sharedModule/components/masterLayout/MasterLayout";
-import NotFound from "./modules/sharedModule/components/notFound/NotFound";
-import Login from "./modules/authenticationModule/components/login/Login";
-import Register from "./modules/authenticationModule/components/register/Register";
-import Logout from "./modules/authenticationModule/components/logout/Logout";
-import CategoriesList from "./modules/categories/components/categoriesList/CategoriesList";
-import Userslist from "./modules/usersModule/components/usersList/Userslist";
-import RecipesList from "./modules/recipesModule/components/recipesList/RecipesList";
-import ForgetPass from "./modules/authenticationModule/components/forgetPass/ForgetPass";
-import ResetPass from "./modules/authenticationModule/components/resetPass/ResetPass";
-import VerifyAccount from "./modules/authenticationModule/components/verifyAccount/VerifyAccount";
-import Dashboard from "./modules/sharedModule/components/dashboard/Dashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ForgetPass from "./modules/authenticationModule/components/forgetPass/ForgetPass";
+import Login from "./modules/authenticationModule/components/login/Login";
+import Logout from "./modules/authenticationModule/components/logout/Logout";
+import Register from "./modules/authenticationModule/components/register/Register";
+import ResetPass from "./modules/authenticationModule/components/resetPass/ResetPass";
+import VerifyAccount from "./modules/authenticationModule/components/verifyAccount/VerifyAccount";
+import CategoriesList from "./modules/categories/components/categoriesList/CategoriesList";
+import RecipesList from "./modules/recipesModule/components/recipesList/RecipesList";
+import AuthLayout from "./modules/sharedModule/components/authLayout/AuthLayout";
+import Dashboard from "./modules/sharedModule/components/dashboard/Dashboard";
 import GuardedRoute from "./modules/sharedModule/components/guardedRoute/GuardedRoute";
-import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
+import MasterLayout from "./modules/sharedModule/components/masterLayout/MasterLayout";
+import NotFound from "./modules/sharedModule/components/notFound/NotFound";
+import Userslist from "./modules/usersModule/components/usersList/Userslist";
+import Favorites from "./modules/userPortal/components/favorites/Favorites";
 
 function App() {
-  const [loginData, setLoginData] = useState(null);
-
-  const savingLoggedData = () => {
-    const token = localStorage.getItem("token");
-    const decodeToken = token && jwtDecode(token);
-    setLoginData(decodeToken);
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      savingLoggedData();
-    }
-  }, []);
-
+  const loginData = JSON.parse(localStorage.getItem("LoggedUserInfo"));
   const routes = createBrowserRouter([
     {
       path: "/",
@@ -69,7 +55,7 @@ function App() {
       path: "dashboard",
       element: (
         <GuardedRoute loginData={loginData}>
-          <MasterLayout loginData={loginData} />
+          <MasterLayout />
         </GuardedRoute>
       ),
       errorElement: <NotFound />,
@@ -86,6 +72,10 @@ function App() {
         {
           path: "recipes",
           element: <RecipesList />,
+        },
+        {
+          path: "favorites",
+          element: <Favorites />,
         },
       ],
     },

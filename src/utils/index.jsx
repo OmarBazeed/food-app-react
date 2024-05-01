@@ -33,6 +33,12 @@ export const sidebarContent = [
     id: 5,
   },
   {
+    icon: <i className="fa-solid fa-heart"></i>,
+    path: <NavLink to="/dashboard/favorites" />,
+    title: "WishList",
+    id: 7,
+  },
+  {
     icon: <i className="fa-solid fa-arrow-right-from-bracket"></i>,
     path: "",
     title: "Logout",

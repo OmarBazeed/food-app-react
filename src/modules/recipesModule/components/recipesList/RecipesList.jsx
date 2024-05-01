@@ -6,17 +6,13 @@ import axios from "axios";
 import { mainURL } from "../../../../utils";
 import DeleteModal from "../../../sharedModule/components/popUpModal/DeleteModal";
 import NoData from "../../../sharedModule/components/noData/NoData";
-import AddRecipe from "../AddRecipe";
-import UpdateRecipe from "./UpdateRecipe";
+import AddUpdateRecipe from "./AddUpdateRecipe";
 const RecipesList = () => {
   const [recipes, setRecipes] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
   const [addBtnClicked, setaAddBtnClicked] = useState(false);
   const [updateBtnClicked, setUpdateBtnClicked] = useState(false);
-
   const [UpdatedRecipe, setUpdatedRecipe] = useState({});
-
   const token = localStorage.getItem("token");
   const [id, setId] = useState("");
 
@@ -46,13 +42,11 @@ const RecipesList = () => {
         />
       )}
 
-      {addBtnClicked ? (
-        <AddRecipe
+      {addBtnClicked || updateBtnClicked ? (
+        <AddUpdateRecipe
+          addBtnClicked={addBtnClicked}
           setaAddBtnClicked={setaAddBtnClicked}
-          getAllRecipes={getAllRecipes}
-        />
-      ) : updateBtnClicked ? (
-        <UpdateRecipe
+          updateBtnClicked={updateBtnClicked}
           setUpdateBtnClicked={setUpdateBtnClicked}
           UpdatedRecipe={UpdatedRecipe}
           getAllRecipes={getAllRecipes}
@@ -142,9 +136,11 @@ const RecipesList = () => {
                     );
                   })
                 ) : (
-                  <div className="w-100 m-auto text-center ms-">
-                    <NoData />
-                  </div>
+                  <tr>
+                    <td colSpan={7} className="bg-transparent m-auto">
+                      <NoData />
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </Table>

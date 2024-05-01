@@ -9,11 +9,13 @@ import {
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
 
-const UpdateCategory = ({
-  updatedCategory,
+const AddUpdateCategory = ({
+  getAllCategories,
+  addBtnClicked,
+  setaAddBtnClicked,
   updateBtnClicked,
   setUpdateBtnClicked,
-  getAllCategories,
+  updatedCategory,
 }) => {
   const {
     register,
@@ -21,17 +23,17 @@ const UpdateCategory = ({
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    try {
-      let res = await axios.put(
-        `${mainURL}/Category/${updatedCategory.id}`,
-        data,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+    addBtnClicked && savingAddCategory(data);
+    updateBtnClicked && savingUpdateCategory(data, updatedCategory.id);
+  };
 
+  const savingAddCategory = async (data) => {
+    try {
+      let res = await axios.post(`${mainURL}/Category/`, data, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       SuccessToast(
-        res.data.message || "You Updated This Category Successfully"
+        res.data.message || "You Deleted This Category Successfully"
       );
       getAllCategories();
       handleClose();
@@ -39,18 +41,36 @@ const UpdateCategory = ({
       FailToast(error.response.data.message);
     }
   };
-  const handleClose = () => setUpdateBtnClicked(false);
+  const savingUpdateCategory = async (data, id) => {
+    try {
+      let res = await axios.put(`${mainURL}/Category/${id}`, data, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      SuccessToast(
+        res.data.message || "You Deleted This Category Successfully"
+      );
+      getAllCategories();
+      handleClose();
+    } catch (error) {
+      FailToast(error.response.data.message);
+    }
+  };
+
+  const handleClose = () => {
+    setaAddBtnClicked(false);
+    setUpdateBtnClicked(false);
+  };
 
   return (
     <>
       <section>
         <Modal
-          show={updateBtnClicked}
+          show={addBtnClicked || updateBtnClicked}
           onHide={handleClose}
           className="text-center m-auto"
         >
           <Modal.Header>
-            <h3>Add Category</h3>
+            <h3>{addBtnClicked ? "Add Category" : "Update Category"}</h3>
             <Button
               variant="outline-danger ms-auto rounded-circle"
               onClick={() => handleClose()}
@@ -65,7 +85,7 @@ const UpdateCategory = ({
                 placeholder="Enter Category Name"
                 className="form-control"
                 {...register("name", { required: "Enter Category Name" })}
-                defaultValue={updatedCategory?.name}
+                defaultValue={updateBtnClicked ? updatedCategory.name : ""}
               />
               {errors?.name && (
                 <p className="text-white handleErr fw-bold p-2 mt-2">
@@ -74,7 +94,7 @@ const UpdateCategory = ({
               )}
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="primary" type="submit" className="px-4">
+              <Button variant="success" type="submit" className="px-4">
                 Save
               </Button>
             </Modal.Footer>
@@ -85,4 +105,4 @@ const UpdateCategory = ({
   );
 };
 
-export default UpdateCategory;
+export default AddUpdateCategory;

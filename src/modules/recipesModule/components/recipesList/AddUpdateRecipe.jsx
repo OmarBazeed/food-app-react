@@ -1,15 +1,22 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
-import { mainURL } from "../../../utils";
+import { mainURL } from "../../../../utils";
 import {
   FailToast,
   SuccessToast,
-} from "../../sharedModule/components/toasts/Toast";
-import { useEffect, useState } from "react";
+} from "../../../sharedModule/components/toasts/Toast";
 
-const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
+const AddRecipe = ({
+  addBtnClicked,
+  setaAddBtnClicked,
+  getAllRecipes,
+  updateBtnClicked,
+  setUpdateBtnClicked,
+  UpdatedRecipe: { id, name, price, description } = {},
+}) => {
   const token = localStorage.getItem("token");
   const [tagsList, setTagsList] = useState([]);
   const [categoriesList, setCategories] = useState([]);
@@ -24,14 +31,18 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
   };
   const getAllCategories = async () => {
     try {
-      let res = await axios.get(`${mainURL}/tag/`);
-      setTagsList(res.data);
+      let res = await axios.get(
+        `${mainURL}/Category/?pageSize=10&pageNumber=1`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCategories(res.data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleCancel = () => {
+    setUpdateBtnClicked(false);
     setaAddBtnClicked(false);
   };
   const {
@@ -42,15 +53,18 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("tagId", data.tagId);
+    formData.append("price", data.price);
+    formData.append("categoriesIds", data.categoriesIds);
+    formData.append("description", data.description);
+    formData.append("recipeImage", data.recipeImage[0]);
+    (await addBtnClicked) && SavingAddRecipe(formData);
+    (await updateBtnClicked) && SavingUpdateRecipe(formData, id);
+  };
+  const SavingAddRecipe = async (formData) => {
     try {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("tagId", data.tagId);
-      formData.append("price", data.price);
-      formData.append("categoriesIds", data.categoriesIds);
-      formData.append("description", data.description);
-      formData.append("recipeImage", data.recipeImage[0]);
-
       let res = await axios.post(`${mainURL}/Recipe/`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -60,12 +74,32 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
       SuccessToast(res.data.message);
       reset();
       getAllRecipes();
+      handleCancel();
     } catch (error) {
       FailToast(error.response.data.message);
     }
   };
+
+  const SavingUpdateRecipe = async (formData, id) => {
+    try {
+      await axios.put(`${mainURL}/Recipe/${+id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      SuccessToast("You Updated This Recipe Successfully");
+      reset();
+      getAllRecipes();
+      handleCancel();
+    } catch (error) {
+      FailToast(error.response.data.message);
+    }
+  };
+
   useEffect(() => {
     getAllTags();
+    getAllCategories();
   }, []);
   return (
     <div className="p-3 d-flex flex-column align-items-start justify-content-center">
@@ -102,6 +136,7 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
               {...register("name", {
                 required: "Name Is Required",
               })}
+              defaultValue={updateBtnClicked ? name : ""}
             />
           </div>
           {errors?.name && (
@@ -115,17 +150,14 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
                 required: "TagId Is Required",
               })}
             >
-              {/* {tagsList?.length > 0 &&
+              {tagsList?.length > 0 &&
                 tagsList.map((tag) => {
                   return (
-                    <option key={tag.id} value={tag.name}>
+                    <option key={tag.id} value={tag.id}>
                       {tag.name}
                     </option>
                   );
-                })} */}
-              <option>680</option>
-              <option>690</option>
-              <option>800</option>
+                })}
             </select>
           </div>
           {errors?.tagId && (
@@ -140,6 +172,7 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
               {...register("price", {
                 required: "Price Is Required",
               })}
+              defaultValue={updateBtnClicked ? price : ""}
             />
           </div>
           {errors?.price && (
@@ -159,11 +192,11 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
               })}
               id="catogery"
             >
-              {tagsList?.length > 0 &&
-                tagsList.map((tag) => {
+              {categoriesList?.length > 0 &&
+                categoriesList.map((cate) => {
                   return (
-                    <option key={tag.id} value={tag.name}>
-                      {tag.name}
+                    <option key={cate.id} value={cate.id}>
+                      {cate.id}
                     </option>
                   );
                 })}
@@ -184,6 +217,7 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
               {...register("description", {
                 required: "Description Is Required",
               })}
+              defaultValue={updateBtnClicked ? description : ""}
             ></textarea>
             <label htmlFor="floatingTextarea">
               description <span className="text-danger">*</span>
@@ -210,6 +244,7 @@ const AddRecipe = ({ setaAddBtnClicked, getAllRecipes }) => {
 
           <div className="d-flex justify-content-between mt-2 gap-4">
             <button
+              type="button"
               className="btn btn-outline-success px-5 py-2"
               onClick={() => handleCancel()}
             >

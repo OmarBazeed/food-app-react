@@ -22,6 +22,7 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    console.log(data);
     const formData = new FormData();
     formData.append("userName", data.userName);
     formData.append("email", data.email);
@@ -29,6 +30,7 @@ const Register = () => {
     formData.append("phoneNumber", data.phoneNumber);
     formData.append("password", data.password);
     formData.append("confirmPassword", data.confirmPassword);
+    formData.append("profileImage", data.profileImage[0]);
     try {
       let res = await axios.post(`${mainURL}/Users/Register`, formData);
       setClicked(true);
@@ -164,7 +166,13 @@ const Register = () => {
                     </p>
                   )}
                 </div>
+                <input
+                  type="file"
+                  className="form-control"
+                  {...register("profileImage")}
+                />
               </section>
+
               <div className="mt-3">
                 <div className="my-4 text-end">
                   <NavLink

@@ -13,21 +13,24 @@ const MySideBar = () => {
   console.log(loggedUserInfo);
 
   const showingSidebarElements = (ele) => {
-    if (loggedUserInfo.group.name === "SystemUser") {
-      if (
-        ele.title === "Home" ||
-        ele.title === "Recipes" ||
-        ele.title === "Favorites"
-      ) {
-        return "d-block";
-      } else {
-        return "d-none";
-      }
-    }
+    const allowedTitles =
+      loggedUserInfo.group?.name === "SystemUser"
+        ? ["Home", "Recipes", "Logout", "WishList"]
+        : [
+            "Home",
+            "Recipes",
+            "Logout",
+            "Users",
+            "Categories",
+            "Change Password",
+          ];
+
+    return allowedTitles.includes(ele.title) ? "d-block" : "d-none";
   };
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("LoggedUserInfo");
     navigate("/");
   };
 

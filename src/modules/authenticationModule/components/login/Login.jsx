@@ -44,6 +44,8 @@ const Login = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+      localStorage.getItem("LoggedUserInfo") &&
+        localStorage.removeItem("LoggedUserInfo");
       localStorage.setItem("LoggedUserInfo", JSON.stringify(res.data));
     } catch (error) {
       FailToast(error.response.data.message);

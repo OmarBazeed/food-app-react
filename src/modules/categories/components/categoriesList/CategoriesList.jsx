@@ -5,8 +5,7 @@ import recipesImg from "../../../../assets/imgs/recipesImg.png";
 import { mainURL } from "../../../../utils";
 import Header from "../../../sharedModule/components/header/Header";
 import NoData from "../../../sharedModule/components/noData/NoData";
-import AddCategory from "../categoriesAction/AddCategory";
-import UpdateCategory from "../categoriesAction/UpdateCategory";
+import AddUpdateCategory from "../categoriesAction/AddUpdateCategory";
 import DeleteCategory from "../categoriesAction/DeleteCategory";
 const CategoriesList = () => {
   const [categories, setCategories] = useState([]);
@@ -48,31 +47,25 @@ const CategoriesList = () => {
           setOpenDeleteModal={setOpenDeleteModal}
         />
       )}
-      {addBtnClicked && (
-        <AddCategory
-          setaAddBtnClicked={setaAddBtnClicked}
-          getAllCategories={getAllCategories}
+      {(addBtnClicked || updateBtnClicked) && (
+        <AddUpdateCategory
           addBtnClicked={addBtnClicked}
-        />
-      )}
-      {updateBtnClicked && (
-        <UpdateCategory
+          setaAddBtnClicked={setaAddBtnClicked}
           updateBtnClicked={updateBtnClicked}
           setUpdateBtnClicked={setUpdateBtnClicked}
-          getAllCategories={getAllCategories}
           updatedCategory={updatedCategory}
+          getAllCategories={getAllCategories}
         />
       )}
-
       <div className="d-flex align-items-start flex-column w-100">
         <Header
-          title="Recipes Items"
+          title="Categories Items"
           description="You can now add your items that any user can order it from the Application and you can edit"
           imgSource={recipesImg}
         />
         <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3">
           <div>
-            <h4 className="fw-bold">Recipe Table Details</h4>
+            <h4 className="fw-bold">Category Table Details</h4>
             <p className="">You can check all details</p>
           </div>
           <div>

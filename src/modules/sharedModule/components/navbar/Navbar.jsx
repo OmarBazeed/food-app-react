@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
 import { NavLink } from "react-router-dom";
 import avatar from "../../../../assets/imgs/avatar.png";
 
 /* eslint-disable react/prop-types */
-const Navbar = ({ loginData }) => {
+const Navbar = () => {
+  const loggedUserInfo = JSON.parse(localStorage.getItem("LoggedUserInfo"));
+  console.log(loggedUserInfo);
   return (
     <nav className="navbar navbar-expand-lg bg-light w-100 ms-3 pe-2">
       <div className="container-fluid">
@@ -34,9 +37,17 @@ const Navbar = ({ loginData }) => {
                 to=""
               >
                 <div className="d-flex align-items-center gap-2">
-                  <img src={avatar} alt="" className="avatarImg" />
+                  <img
+                    src={
+                      loggedUserInfo?.imagePath
+                        ? `https://upskilling-egypt.com:3006/${loggedUserInfo.imagePath}`
+                        : avatar
+                    }
+                    alt=""
+                    className="avatarImg"
+                  />
                   <span className="fw-bold text-capitalize">
-                    {loginData?.userName}
+                    {loggedUserInfo?.userName}
                   </span>
                   <spn>
                     <i className="fa-solid fa-angle-down"></i>
