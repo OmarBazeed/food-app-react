@@ -16,6 +16,7 @@ const AddUpdateCategory = ({
   updateBtnClicked,
   setUpdateBtnClicked,
   updatedCategory,
+  name,
 }) => {
   const {
     register,
@@ -35,7 +36,7 @@ const AddUpdateCategory = ({
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"
       );
-      getAllCategories();
+      getAllCategories(name, 10, 1);
       handleClose();
     } catch (error) {
       FailToast(error.response.data.message);
@@ -49,7 +50,7 @@ const AddUpdateCategory = ({
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"
       );
-      getAllCategories();
+      getAllCategories(name, 10, 1);
       handleClose();
     } catch (error) {
       FailToast(error.response.data.message);

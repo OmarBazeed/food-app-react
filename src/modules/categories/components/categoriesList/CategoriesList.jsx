@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
@@ -15,26 +16,37 @@ const CategoriesList = () => {
 
   const [updateBtnClicked, setUpdateBtnClicked] = useState(false);
   const [updatedCategory, setUpdatedCategory] = useState({});
-
+  const [name, setName] = useState("");
   const token = localStorage.getItem("token");
   const [id, setId] = useState("");
 
-  const getAllCategories = useCallback(async () => {
-    try {
-      let res = await axios.get(
-        `${mainURL}/Category/?pageSize=10&pageNumber=1`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setCategories(res.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [token]);
+  const getAllCategories = useCallback(
+    async (name, pSize, pNumbers) => {
+      try {
+        let res = await axios.get(
+          `${mainURL}/Category/?pageSize=${pSize}&pageNumber=${pNumbers}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: {
+              name: name,
+            },
+          }
+        );
+        setCategories(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [token]
+  );
 
+  const handleChangeName = (e) => {
+    setName(e.target.value);
+    console.log(name);
+    getAllCategories(name, 10, 1);
+  };
   useEffect(() => {
-    getAllCategories();
+    getAllCategories(name, 10, 1);
   }, [getAllCategories]);
 
   return (
@@ -45,6 +57,7 @@ const CategoriesList = () => {
           id={id}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
+          name={name}
         />
       )}
       {(addBtnClicked || updateBtnClicked) && (
@@ -55,6 +68,7 @@ const CategoriesList = () => {
           setUpdateBtnClicked={setUpdateBtnClicked}
           updatedCategory={updatedCategory}
           getAllCategories={getAllCategories}
+          name={name}
         />
       )}
       <div className="d-flex align-items-start flex-column w-100">
@@ -75,6 +89,19 @@ const CategoriesList = () => {
             >
               Add New Item
             </button>
+          </div>
+        </div>
+
+        <div className="filtaration container-fluid w-100 my-3">
+          <div className="row">
+            <div className="col-md-8">
+              <input
+                type="text"
+                placeholder="Search By Name"
+                className="form-control"
+                onChange={(e) => handleChangeName(e)}
+              />
+            </div>
           </div>
         </div>
 

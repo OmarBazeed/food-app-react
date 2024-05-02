@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -9,13 +10,14 @@ import {
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
 
-const AddRecipe = ({
+const AddUpdateRecipe = ({
   addBtnClicked,
   setaAddBtnClicked,
   getAllRecipes,
   updateBtnClicked,
   setUpdateBtnClicked,
   UpdatedRecipe: { id, name, price, description } = {},
+  filterObj,
 }) => {
   const token = localStorage.getItem("token");
   const [tagsList, setTagsList] = useState([]);
@@ -73,7 +75,7 @@ const AddRecipe = ({
       });
       SuccessToast(res.data.message);
       reset();
-      getAllRecipes();
+      getAllRecipes(filterObj, 10, 1);
       handleCancel();
     } catch (error) {
       FailToast(error.response.data.message);
@@ -90,7 +92,7 @@ const AddRecipe = ({
       });
       SuccessToast("You Updated This Recipe Successfully");
       reset();
-      getAllRecipes();
+      getAllRecipes(filterObj, 10, 1);
       handleCancel();
     } catch (error) {
       FailToast(error.response.data.message);
@@ -260,4 +262,4 @@ const AddRecipe = ({
   );
 };
 
-export default AddRecipe;
+export default AddUpdateRecipe;

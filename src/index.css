@@ -70,6 +70,7 @@
 
 .sidebar-content .ps-sidebar-container {
   height: 100vh;
+  overflow-y: auto;
   background-color: rgba(31, 38, 62, 1);
   color: white;
   font-weight: bold;
@@ -160,4 +161,10 @@ matserLayout
   top: 7px;
   right: 7px;
   font-weight: bold;
+}
+.navigation {
+  width: 100% !important;
+}
+.page-item {
+  cursor: pointer;
 }

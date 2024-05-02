@@ -19,7 +19,7 @@ const DeleteModal = ({
       let res = await axios.delete(`${mainURL}/Recipe/${id}`);
       console.log(res);
       SuccessToast(res.data.message || "You Deleted This Recipe Successfully");
-      getAllRecipes();
+      getAllRecipes({}, 10, 1);
     } catch (error) {
       FailToast(error.response.data.message);
     }

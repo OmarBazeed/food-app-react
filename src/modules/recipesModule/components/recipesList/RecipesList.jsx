@@ -1,35 +1,100 @@
-import Header from "../../../sharedModule/components/header/Header";
-import recipesImg from "../../../../assets/imgs/recipesImg.png";
-import { Table } from "react-bootstrap";
-import { useCallback, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { Table } from "react-bootstrap";
+import recipesImg from "../../../../assets/imgs/recipesImg.png";
 import { mainURL } from "../../../../utils";
-import DeleteModal from "../../../sharedModule/components/popUpModal/DeleteModal";
+import Header from "../../../sharedModule/components/header/Header";
 import NoData from "../../../sharedModule/components/noData/NoData";
+import DeleteModal from "../../../sharedModule/components/popUpModal/DeleteModal";
 import AddUpdateRecipe from "./AddUpdateRecipe";
+
 const RecipesList = () => {
   const [recipes, setRecipes] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [addBtnClicked, setaAddBtnClicked] = useState(false);
   const [updateBtnClicked, setUpdateBtnClicked] = useState(false);
   const [UpdatedRecipe, setUpdatedRecipe] = useState({});
-  const token = localStorage.getItem("token");
+  const [tagsList, setTagsList] = useState([]);
+  const [categoriesList, setCategories] = useState([]);
   const [id, setId] = useState("");
+  const [filterObj, setFilterObj] = useState({
+    name: "",
+    tagId: "",
+    categoryId: "",
+  });
+  const [paginationNum, setPaginationNum] = useState([]);
+  const token = localStorage.getItem("token");
 
-  const getAllRecipes = useCallback(async () => {
+  const getAllRecipes = useCallback(
+    async (filterObj, pSize, pNumber) => {
+      try {
+        let res = await axios.get(
+          `${mainURL}/Recipe/?pageSize=${pSize}&pageNumber=${pNumber}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: {
+              name: filterObj?.name,
+              tagId: filterObj?.tagId,
+              categoryId: filterObj?.categoryId,
+            },
+          }
+        );
+        setRecipes(res.data.data);
+        setPaginationNum(
+          Array(res.data.totalNumberOfPages)
+            .fill()
+            .map((_, i) => i + 1)
+        );
+        console.log(paginationNum);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [token]
+  );
+
+  const handleFilterObj = (e) => {
+    const { id, value } = e.target;
+    id === "Name" &&
+      setFilterObj((prevFilterObj) => ({ ...prevFilterObj, name: value }));
+    id === "tagId" &&
+      setFilterObj((prevFilterObj) => ({ ...prevFilterObj, tagId: value }));
+    id === "categoryId" &&
+      setFilterObj((prevFilterObj) => ({
+        ...prevFilterObj,
+        categoryId: value,
+      }));
+    getAllRecipes(filterObj, 20, 1);
+  };
+
+  const getAllTags = useCallback(async () => {
     try {
-      let res = await axios.get(`${mainURL}/Recipe/?pageSize=10&pageNumber=1`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setRecipes(res.data.data);
+      let res = await axios.get(`${mainURL}/tag/`);
+      setTagsList(res.data);
     } catch (error) {
       console.log(error);
+    }
+  }, []);
+  const getAllCategories = useCallback(async () => {
+    {
+      try {
+        let res = await axios.get(
+          `${mainURL}/Category/?pageSize=10&pageNumber=1`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setCategories(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, [token]);
 
   useEffect(() => {
-    getAllRecipes();
-  }, [getAllRecipes]);
+    getAllTags();
+    getAllCategories();
+    getAllRecipes(filterObj, 10, 1);
+  }, [filterObj]);
 
   return (
     <>
@@ -39,6 +104,7 @@ const RecipesList = () => {
           id={id}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
+          filterObj={filterObj}
         />
       )}
 
@@ -50,6 +116,7 @@ const RecipesList = () => {
           setUpdateBtnClicked={setUpdateBtnClicked}
           UpdatedRecipe={UpdatedRecipe}
           getAllRecipes={getAllRecipes}
+          filterObj={filterObj}
         />
       ) : (
         <div className="d-flex align-items-start flex-column w-100">
@@ -70,6 +137,58 @@ const RecipesList = () => {
               >
                 Add New Item
               </button>
+            </div>
+          </div>
+
+          <div className="filtaration container-fluid w-100 my-3">
+            <div className="row">
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  placeholder="Search By Recipe"
+                  className="form-control"
+                  id="Name"
+                  onChange={(e) => handleFilterObj(e)}
+                />
+              </div>
+              <div className="col-md-3">
+                <select
+                  className="form-control"
+                  onChange={(e) => handleFilterObj(e)}
+                  id="tagId"
+                >
+                  <option value="" selected>
+                    CategoryId
+                  </option>
+                  {tagsList?.length > 0 &&
+                    tagsList.map((tag) => {
+                      return (
+                        <option key={tag.id} value={tag.id}>
+                          {tag.name}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+              <div className="col-md-3">
+                <select
+                  className="form-control"
+                  onChange={(e) => handleFilterObj(e)}
+                  id="categoryId"
+                >
+                  <option value="" selected>
+                    Tag
+                  </option>
+                  {categoriesList?.length > 0 &&
+                    categoriesList.map((cate) => {
+                      return (
+                        <option key={cate.id} value={cate.id}>
+                          {cate.name}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
             </div>
           </div>
 
@@ -144,6 +263,34 @@ const RecipesList = () => {
                 )}
               </tbody>
             </Table>
+          </div>
+
+          <div className="w-100 paginationSec">
+            <nav aria-label="Page navigation example w-100">
+              <ul className="pagination w-100 d-flex align-items-center justify-content-center">
+                <li className="page-item">
+                  <a className="page-link" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                {paginationNum.map((ele) => {
+                  return (
+                    <li
+                      className="page-item"
+                      key={ele}
+                      onClick={() => getAllRecipes(filterObj, 10, ele)}
+                    >
+                      <a className="page-link">{ele}</a>
+                    </li>
+                  );
+                })}
+                <li className="page-item">
+                  <a className="page-link" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       )}

@@ -1,32 +1,33 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import PopUpImag from "../../../../assets/imgs/no-data.png";
-import { mainURL } from "../../../../utils";
+import PopUpImag from "../../../assets/imgs/no-data.png";
 
 import { Button, Modal } from "react-bootstrap";
+
+import { mainURL } from "../../../utils";
 import {
   FailToast,
   SuccessToast,
-} from "../../../sharedModule/components/toasts/Toast";
+} from "../../sharedModule/components/toasts/Toast";
 
-const DeleteCategory = ({
-  getAllCategories,
+const DeleteUser = ({
+  getAllUsers,
   id,
   openDeleteModal,
   setOpenDeleteModal,
-  name,
+  filterObj,
 }) => {
   const handleClose = () => setOpenDeleteModal(false);
 
   const handleDelte = async (id) => {
     try {
-      let res = await axios.delete(`${mainURL}/Category/${id}`, {
+      let res = await axios.delete(`${mainURL}/Users/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"
       );
-      getAllCategories(name);
+      getAllUsers(filterObj, 10, 1);
     } catch (error) {
       FailToast(error.response.data.message);
     }
@@ -73,4 +74,4 @@ const DeleteCategory = ({
   );
 };
 
-export default DeleteCategory;
+export default DeleteUser;
