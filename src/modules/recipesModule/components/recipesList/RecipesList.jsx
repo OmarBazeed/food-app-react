@@ -14,17 +14,19 @@ const RecipesList = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [addBtnClicked, setaAddBtnClicked] = useState(false);
   const [updateBtnClicked, setUpdateBtnClicked] = useState(false);
+  const [viewBtnClicked, setViewBtnClicked] = useState(false);
   const [UpdatedRecipe, setUpdatedRecipe] = useState({});
   const [tagsList, setTagsList] = useState([]);
   const [categoriesList, setCategories] = useState([]);
-  const [id, setId] = useState("");
+  const [paginationNum, setPaginationNum] = useState([]);
+  const token = localStorage.getItem("token");
+  const loggedUser = JSON.parse(localStorage.getItem("LoggedUserInfo"));
+
   const [filterObj, setFilterObj] = useState({
     name: "",
     tagId: "",
     categoryId: "",
   });
-  const [paginationNum, setPaginationNum] = useState([]);
-  const token = localStorage.getItem("token");
 
   const getAllRecipes = useCallback(
     async (filterObj, pSize, pNumber) => {
@@ -46,7 +48,6 @@ const RecipesList = () => {
             .fill()
             .map((_, i) => i + 1)
         );
-        console.log(paginationNum);
       } catch (error) {
         console.log(error);
       }
@@ -65,7 +66,7 @@ const RecipesList = () => {
         ...prevFilterObj,
         categoryId: value,
       }));
-    getAllRecipes(filterObj, 20, 1);
+    // getAllRecipes(filterObj, 20, 1);
   };
 
   const getAllTags = useCallback(async () => {
@@ -98,14 +99,18 @@ const RecipesList = () => {
 
   return (
     <>
-      {openDeleteModal && (
+      {openDeleteModal || viewBtnClicked ? (
         <DeleteModal
           getAllRecipes={getAllRecipes}
-          id={id}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
           filterObj={filterObj}
+          UpdatedRecipe={UpdatedRecipe}
+          viewBtnClicked={viewBtnClicked}
+          setViewBtnClicked={setViewBtnClicked}
         />
+      ) : (
+        ""
       )}
 
       {addBtnClicked || updateBtnClicked ? (
@@ -230,26 +235,35 @@ const RecipesList = () => {
                           <i
                             className="me-3 fa-regular fa-eye text-warning"
                             type="button"
-                          ></i>
-                          <i
-                            className="me-3 fa-solid fa-pen-to-square text-primary"
                             onClick={() => {
-                              setUpdateBtnClicked(true);
-                              setId(ele.id);
+                              setViewBtnClicked(true);
                               setUpdatedRecipe(ele);
                             }}
-                            type="button"
                           ></i>
-                          <i
-                            className="me-3 fa-solid fa-trash text-danger"
-                            type="button"
-                            data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop"
-                            onClick={() => {
-                              setOpenDeleteModal(true);
-                              setId(ele.id);
-                            }}
-                          ></i>
+                          {loggedUser.group.name == "SystemUser" ? (
+                            ""
+                          ) : (
+                            <>
+                              <i
+                                className="me-3 fa-solid fa-pen-to-square text-primary"
+                                onClick={() => {
+                                  setUpdateBtnClicked(true);
+                                  setUpdatedRecipe(ele);
+                                }}
+                                type="button"
+                              ></i>
+                              <i
+                                className="me-3 fa-solid fa-trash text-danger"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop"
+                                onClick={() => {
+                                  setOpenDeleteModal(true);
+                                  setUpdatedRecipe(ele);
+                                }}
+                              ></i>
+                            </>
+                          )}
                         </td>
                       </tr>
                     );

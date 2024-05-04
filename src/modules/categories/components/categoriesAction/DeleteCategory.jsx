@@ -14,7 +14,7 @@ const DeleteCategory = ({
   id,
   openDeleteModal,
   setOpenDeleteModal,
-  name,
+  catName,
 }) => {
   const handleClose = () => setOpenDeleteModal(false);
 
@@ -26,7 +26,7 @@ const DeleteCategory = ({
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"
       );
-      getAllCategories(name);
+      getAllCategories(catName);
     } catch (error) {
       FailToast(error.response.data.message);
     }

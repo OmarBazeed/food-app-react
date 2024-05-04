@@ -10,7 +10,6 @@ const MySideBar = () => {
   const [openChangeModal, setOpenChangeModal] = useState(false);
   const navigate = useNavigate();
   const loggedUserInfo = JSON.parse(localStorage.getItem("LoggedUserInfo"));
-  console.log(loggedUserInfo);
 
   const showingSidebarElements = (ele) => {
     const allowedTitles =

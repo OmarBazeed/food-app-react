@@ -16,7 +16,7 @@ const AddUpdateRecipe = ({
   getAllRecipes,
   updateBtnClicked,
   setUpdateBtnClicked,
-  UpdatedRecipe: { id, name, price, description } = {},
+  UpdatedRecipe: { id, name, price, description, tag, category } = {},
   filterObj,
 }) => {
   const token = localStorage.getItem("token");
@@ -116,11 +116,13 @@ const AddUpdateRecipe = ({
           </p>
         </div>
         <div>
-          <button className="btn btn-success p-2">
+          <button
+            className="btn btn-success p-2"
+            onClick={() => handleCancel()}
+          >
             <NavLink
               to="/dashboard/recipes"
               className="text-light text-decoration-none"
-              onClick={() => setaAddBtnClicked(false)}
             >
               Fill Recipes <i className="fa-solid fa-arrow-right-long ms-2"></i>
             </NavLink>
@@ -151,12 +153,22 @@ const AddUpdateRecipe = ({
               {...register("tagId", {
                 required: "TagId Is Required",
               })}
+              defaultValue={tag?.name}
             >
+              {addBtnClicked && (
+                <option value="" selected disabled>
+                  Tag
+                </option>
+              )}
               {tagsList?.length > 0 &&
-                tagsList.map((tag) => {
+                tagsList.map((taG) => {
                   return (
-                    <option key={tag.id} value={tag.id}>
-                      {tag.name}
+                    <option
+                      key={taG.id}
+                      value={taG.id}
+                      selected={updateBtnClicked && tag.name == taG.name}
+                    >
+                      {taG.name}
                     </option>
                   );
                 })}
@@ -193,11 +205,21 @@ const AddUpdateRecipe = ({
                 required: "CategoriesIds Is Required",
               })}
               id="catogery"
+              defaultValue={category?.length > 0 ? category[0].name : ""}
             >
+              {addBtnClicked && (
+                <option value="" selected disabled>
+                  Category
+                </option>
+              )}
               {categoriesList?.length > 0 &&
                 categoriesList.map((cate) => {
                   return (
-                    <option key={cate.id} value={cate.id}>
+                    <option
+                      key={cate.id}
+                      value={cate.id}
+                      selected={updateBtnClicked && cate.id == category[0]?.id}
+                    >
                       {cate.id}
                     </option>
                   );

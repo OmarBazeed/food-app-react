@@ -38,6 +38,7 @@ export const sidebarContent = [
     title: "WishList",
     id: 7,
   },
+
   {
     icon: <i className="fa-solid fa-arrow-right-from-bracket"></i>,
     path: "",

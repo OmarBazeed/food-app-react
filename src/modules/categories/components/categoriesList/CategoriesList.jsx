@@ -11,28 +11,32 @@ import DeleteCategory from "../categoriesAction/DeleteCategory";
 const CategoriesList = () => {
   const [categories, setCategories] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
   const [addBtnClicked, setaAddBtnClicked] = useState(false);
-
   const [updateBtnClicked, setUpdateBtnClicked] = useState(false);
   const [updatedCategory, setUpdatedCategory] = useState({});
-  const [name, setName] = useState("");
+  const [paginationNum, setPaginationNum] = useState([]);
+  const [catName, setCatName] = useState("");
   const token = localStorage.getItem("token");
   const [id, setId] = useState("");
 
   const getAllCategories = useCallback(
-    async (name, pSize, pNumbers) => {
+    async (catName, pSize, pNumbers) => {
       try {
         let res = await axios.get(
           `${mainURL}/Category/?pageSize=${pSize}&pageNumber=${pNumbers}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             params: {
-              name: name,
+              name: catName,
             },
           }
         );
         setCategories(res.data.data);
+        setPaginationNum(
+          Array(res.data.totalNumberOfPages)
+            .fill()
+            .map((_, i) => i + 1)
+        );
       } catch (error) {
         console.log(error);
       }
@@ -41,13 +45,12 @@ const CategoriesList = () => {
   );
 
   const handleChangeName = (e) => {
-    setName(e.target.value);
-    console.log(name);
-    getAllCategories(name, 10, 1);
+    const { value } = e.target;
+    setCatName(value);
   };
   useEffect(() => {
-    getAllCategories(name, 10, 1);
-  }, [getAllCategories]);
+    getAllCategories(catName, 10, 1);
+  }, [getAllCategories, catName]);
 
   return (
     <>
@@ -57,7 +60,7 @@ const CategoriesList = () => {
           id={id}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
-          name={name}
+          catName={catName}
         />
       )}
       {(addBtnClicked || updateBtnClicked) && (
@@ -68,7 +71,7 @@ const CategoriesList = () => {
           setUpdateBtnClicked={setUpdateBtnClicked}
           updatedCategory={updatedCategory}
           getAllCategories={getAllCategories}
-          name={name}
+          catName={catName}
         />
       )}
       <div className="d-flex align-items-start flex-column w-100">
@@ -157,6 +160,34 @@ const CategoriesList = () => {
               )}
             </tbody>
           </Table>
+        </div>
+
+        <div className="w-100 paginationSec">
+          <nav aria-label="Page navigation example w-100">
+            <ul className="pagination w-100 d-flex align-items-center justify-content-center">
+              <li className="page-item">
+                <a className="page-link" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              {paginationNum.map((ele) => {
+                return (
+                  <li
+                    className="page-item"
+                    key={ele}
+                    onClick={() => getAllCategories(catName, 10, ele)}
+                  >
+                    <a className="page-link">{ele}</a>
+                  </li>
+                );
+              })}
+              <li className="page-item">
+                <a className="page-link" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </>

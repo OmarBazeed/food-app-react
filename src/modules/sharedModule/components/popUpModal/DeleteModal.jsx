@@ -8,20 +8,50 @@ import { FailToast, SuccessToast } from "../toasts/Toast";
 
 const DeleteModal = ({
   getAllRecipes,
-  id,
+  UpdatedRecipe,
   openDeleteModal,
   setOpenDeleteModal,
+  viewBtnClicked,
+  setViewBtnClicked,
 }) => {
-  const handleClose = () => setOpenDeleteModal(false);
+  const token = localStorage.getItem("token");
+  const loggedUser = JSON.parse(localStorage.getItem("LoggedUserInfo"));
+  console.log(UpdatedRecipe);
+  const handleClose = () => {
+    setOpenDeleteModal(false);
+    setViewBtnClicked(false);
+  };
 
-  const handleDelte = async (id) => {
+  const handleDelte = async (UpdatedRecipe) => {
     try {
-      let res = await axios.delete(`${mainURL}/Recipe/${id}`);
+      let res = await axios.delete(`${mainURL}/Recipe/${UpdatedRecipe.id}`);
       console.log(res);
       SuccessToast(res.data.message || "You Deleted This Recipe Successfully");
       getAllRecipes({}, 10, 1);
+      handleClose();
     } catch (error) {
       FailToast(error.response.data.message);
+    }
+  };
+
+  const handleAddFavorites = async (UpdatedRecipe) => {
+    try {
+      let res = await axios.post(
+        `${mainURL}/userRecipe`,
+        {
+          recipeId: UpdatedRecipe.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      SuccessToast(`You Added ${res.data.recipe.name} To Favs`);
+      handleClose();
+      // handleDelte(UpdatedRecipe);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -29,11 +59,12 @@ const DeleteModal = ({
     <>
       <section>
         <Modal
-          show={openDeleteModal}
+          show={openDeleteModal || viewBtnClicked}
           onHide={handleClose}
           className="text-center m-auto"
         >
           <Modal.Header>
+            <h4 className="text-capitalize">recipe details</h4>
             <Button
               variant="outline-danger ms-auto rounded-circle"
               onClick={() => handleClose()}
@@ -42,23 +73,82 @@ const DeleteModal = ({
             </Button>
           </Modal.Header>
           <Modal.Body>
-            <img src={PopUpImag} alt="..." />
-            <h4 className="fw-bold my-3">Delete This Item ?</h4>
-            <p className="text-muted">
-              are you sure you want to delete this item ? if you are sure just
-              click on delete it
-            </p>
+            {openDeleteModal && (
+              <>
+                <img src={PopUpImag} alt="..." />
+                <h4 className="fw-bold my-3">Delete This Item ?</h4>
+                <p className="text-muted">
+                  are you sure you want to delete this item ? if you are sure
+                  just click on delete it
+                </p>
+              </>
+            )}
+            {viewBtnClicked && (
+              <>
+                <img
+                  src={`https://upskilling-egypt.com:3006/${UpdatedRecipe.imagePath}`}
+                  className="w-50 h-50 rounded-3"
+                />
+                <div className="d-flex flex-column align-items-start justify-content-start gap-2 mt-3">
+                  {loggedUser.group.name == "SystemUser" ? (
+                    <p>{UpdatedRecipe.description}</p>
+                  ) : (
+                    ""
+                  )}
+
+                  {loggedUser.group.name !== "SystemUser" ? (
+                    <>
+                      <p>
+                        <span className="fw-bold">Recipe Name </span> :
+                        {UpdatedRecipe.name}
+                      </p>
+                      <p>
+                        <span className="fw-bold"> Recipe Price </span>:
+                        {UpdatedRecipe.price}
+                      </p>
+                      <p>
+                        <span className="fw-bold"> Recipe Tag </span>:
+                        {UpdatedRecipe.tag?.name}
+                      </p>
+                      <p>
+                        <span className="fw-bold"> Recipe Category </span>:
+                        {UpdatedRecipe.category[0]?.name}
+                      </p>
+                      <p>
+                        <span className="fw-bold"> Recipe Description </span>:
+                        {UpdatedRecipe.description}
+                      </p>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </>
+            )}
+            {console.log(UpdatedRecipe)}
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant="outline-danger"
-              onClick={() => {
-                handleDelte(id);
-                handleClose();
-              }}
-            >
-              Delete
-            </Button>
+            {openDeleteModal && (
+              <Button
+                variant="outline-danger"
+                onClick={() => handleDelte(UpdatedRecipe)}
+              >
+                Delete
+              </Button>
+            )}
+            {viewBtnClicked && (
+              <Button
+                variant="outline-danger"
+                onClick={() => handleAddFavorites(UpdatedRecipe)}
+                className={
+                  loggedUser.group.name == "SystemUser"
+                    ? "d-block !important"
+                    : "d-none !important"
+                }
+              >
+                Favorite
+              </Button>
+            )}
           </Modal.Footer>
         </Modal>
       </section>

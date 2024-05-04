@@ -5,7 +5,6 @@ import avatar from "../../../../assets/imgs/avatar.png";
 /* eslint-disable react/prop-types */
 const Navbar = () => {
   const loggedUserInfo = JSON.parse(localStorage.getItem("LoggedUserInfo"));
-  console.log(loggedUserInfo);
   return (
     <nav className="navbar navbar-expand-lg bg-light w-100 ms-3 pe-2">
       <div className="container-fluid">
