@@ -13,10 +13,11 @@ const DeleteModal = ({
   setOpenDeleteModal,
   viewBtnClicked,
   setViewBtnClicked,
+  recipes,
+  setRecipes,
 }) => {
   const token = localStorage.getItem("token");
   const loggedUser = JSON.parse(localStorage.getItem("LoggedUserInfo"));
-  console.log(UpdatedRecipe);
   const handleClose = () => {
     setOpenDeleteModal(false);
     setViewBtnClicked(false);
@@ -49,7 +50,8 @@ const DeleteModal = ({
       );
       SuccessToast(`You Added ${res.data.recipe.name} To Favs`);
       handleClose();
-      // handleDelte(UpdatedRecipe);
+      const filteredFavs = recipes.filter((ele) => ele.id != UpdatedRecipe.id);
+      setRecipes(filteredFavs);
     } catch (error) {
       console.log(error);
     }
@@ -125,7 +127,6 @@ const DeleteModal = ({
                 </div>
               </>
             )}
-            {console.log(UpdatedRecipe)}
           </Modal.Body>
           <Modal.Footer>
             {openDeleteModal && (

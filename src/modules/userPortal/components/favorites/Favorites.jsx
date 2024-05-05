@@ -1,9 +1,13 @@
 import Header from "../../../sharedModule/components/header/Header";
 import recipesImg from "../../../../assets/imgs/recipesImg.png";
 import { useEffect, useState } from "react";
-import { FailToast } from "../../../sharedModule/components/toasts/Toast";
+import {
+  FailToast,
+  SuccessToast,
+} from "../../../sharedModule/components/toasts/Toast";
 import { mainURL } from "../../../../utils";
 import axios from "axios";
+import NoData from "../../../sharedModule/components/noData/NoData";
 
 const Favorites = () => {
   const [favsList, setFavsList] = useState([]);
@@ -14,20 +18,24 @@ const Favorites = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setFavsList(res.data.data);
-      console.log(res.data.data);
+      const favsListIds = res.data.data.map((ele) => ele.id);
+      console.log(favsListIds);
+      localStorage.setItem("favsArr", JSON.stringify(favsListIds));
     } catch (error) {
       FailToast(error.reponse.data.message);
     }
   };
 
-  const removeFav = async (id) => {
-    console.log(id);
+  const removeFav = async (fav) => {
     try {
-      let res = await axios.delete(`${mainURL}/userRecipe/${id}`, {
+      await axios.delete(`${mainURL}/userRecipe/${fav.id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      console.log(res);
       fetchFavsList();
+      SuccessToast("You Deleted This Recipe Successfully");
+      const oldRes = JSON.parse(localStorage.getItem("NewRecipes"));
+      oldRes.push(fav);
+      localStorage.setItem("NewRecipes", JSON.stringify(oldRes));
     } catch (error) {
       FailToast(error.reponse.data.message);
     }
@@ -46,7 +54,7 @@ const Favorites = () => {
 
       <div className="container my-4">
         <div className="row">
-          {favsList.length > 0 &&
+          {favsList.length > 0 ? (
             favsList.map((fav) => {
               const { description, name, imagePath } = fav.recipe;
               return (
@@ -58,7 +66,7 @@ const Favorites = () => {
                     <button
                       className="favsButton"
                       style={{ outline: "none" }}
-                      onClick={() => removeFav(fav.id)}
+                      onClick={() => removeFav(fav)}
                     >
                       <i className="fa fa-heart text-warning"></i>
                     </button>
@@ -74,7 +82,10 @@ const Favorites = () => {
                   </div>
                 </div>
               );
-            })}
+            })
+          ) : (
+            <NoData />
+          )}
         </div>
       </div>
     </div>

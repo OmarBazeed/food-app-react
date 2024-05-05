@@ -21,7 +21,6 @@ const RecipesList = () => {
   const [paginationNum, setPaginationNum] = useState([]);
   const token = localStorage.getItem("token");
   const loggedUser = JSON.parse(localStorage.getItem("LoggedUserInfo"));
-
   const [filterObj, setFilterObj] = useState({
     name: "",
     tagId: "",
@@ -42,7 +41,18 @@ const RecipesList = () => {
             },
           }
         );
-        setRecipes(res.data.data);
+        const FavsArr = JSON.parse(localStorage.getItem("favsArr"));
+        if (!FavsArr || FavsArr.length === 0) {
+          setRecipes(res.data.data);
+          console.log(res.data.data);
+        } else {
+          const filteredRecipes = res.data.data.filter(
+            (recipe) => !FavsArr.includes(recipe.id)
+          );
+          setRecipes(filteredRecipes);
+          console.log(res.data.data);
+        }
+
         setPaginationNum(
           Array(res.data.totalNumberOfPages)
             .fill()
@@ -66,7 +76,6 @@ const RecipesList = () => {
         ...prevFilterObj,
         categoryId: value,
       }));
-    // getAllRecipes(filterObj, 20, 1);
   };
 
   const getAllTags = useCallback(async () => {
@@ -108,6 +117,8 @@ const RecipesList = () => {
           UpdatedRecipe={UpdatedRecipe}
           viewBtnClicked={viewBtnClicked}
           setViewBtnClicked={setViewBtnClicked}
+          recipes={recipes}
+          setRecipes={setRecipes}
         />
       ) : (
         ""
@@ -232,14 +243,20 @@ const RecipesList = () => {
                         <td>{ele?.tag.name}</td>
                         <td>{ele?.category[0]?.name}</td>
                         <td>
-                          <i
-                            className="me-3 fa-regular fa-eye text-warning"
-                            type="button"
+                          <button
+                            className="btn btn-transparent viewBtn"
                             onClick={() => {
                               setViewBtnClicked(true);
                               setUpdatedRecipe(ele);
                             }}
-                          ></i>
+                            // disabled={favorites.includes(ele.id)}
+                          >
+                            <i
+                              className="me-3 fa-regular fa-eye text-warning"
+                              type="button"
+                            ></i>
+                          </button>
+
                           {loggedUser.group.name == "SystemUser" ? (
                             ""
                           ) : (

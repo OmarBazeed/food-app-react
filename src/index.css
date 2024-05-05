@@ -178,3 +178,6 @@ matserLayout
   top: 15px;
   right: 15px;
 }
+.viewBtn {
+  padding: 0 !important;
+}
