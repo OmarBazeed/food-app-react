@@ -7,9 +7,9 @@ const Navbar = () => {
   const loggedUserInfo = JSON.parse(localStorage.getItem("LoggedUserInfo"));
   return (
     <nav className="navbar navbar-expand-lg bg-light w-100 ms-3 pe-2">
-      <div className="container-fluid">
+      <div className="container-fluid column-gap-5">
         <button
-          className="navbar-toggler"
+          className="navbar-toggler ms-auto"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
@@ -52,9 +52,11 @@ const Navbar = () => {
                     <i className="fa-solid fa-angle-down"></i>
                   </spn>
                 </div>
-                <span className="notificationIcon">
-                  <i className="fa-solid fa-bell fa-2x"></i>
-                </span>
+                <div className="notificationDiv">
+                  <span className="notificationIcon">
+                    <i className="fa-solid fa-bell fa-2x"></i>
+                  </span>
+                </div>
               </NavLink>
             </li>
           </ul>

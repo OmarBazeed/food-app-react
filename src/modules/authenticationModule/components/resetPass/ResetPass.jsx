@@ -5,6 +5,9 @@ import { useForm } from "react-hook-form";
 import { InfinitySpin } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../../../assets/imgs/logo.png";
+import resetMail from "../../../../assets/imgs/animatedPics/email.gif";
+import resetPass from "../../../../assets/imgs/animatedPics/resetPass.gif";
+import Otp from "../../../../assets/imgs/animatedPics/otp.gif";
 import {
   FailToast,
   SuccessToast,
@@ -43,16 +46,7 @@ const ResetPass = () => {
       <div className="auth-container">
         <div className="bg-overlay vh-100">
           <div className="d-flex align-items-center justify-content-center vh-100">
-            <div
-              className={
-                errors?.email ||
-                errors?.password ||
-                errors?.confirmPassword ||
-                errors?.seed
-                  ? "login-contentResetError bg-white border border-2 rounded-2 p-4 my-2"
-                  : "login-contentReset bg-white border border-2 rounded-2 p-4 my-2"
-              }
-            >
+            <div className="h-auto p-4 bg-white border border-2 rounded-2 login-content">
               <div>
                 <div className="text-center mx-auto mb-1">
                   <img src={Logo} alt="logo" />
@@ -64,7 +58,7 @@ const ResetPass = () => {
               </div>
               <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
                 <div className="input-group formIn my-3 bg-lighter p-1 d-flex  align-items-center justify-content-center">
-                  <i className="fa-regular fa-envelope fa-2x me-1"></i>
+                  <img src={resetMail} alt="..." className="loginIcons" />
                   <input
                     type="text"
                     className="form-control bg-transparent border-0 ms-2"
@@ -81,7 +75,7 @@ const ResetPass = () => {
                   </p>
                 )}
                 <div className="input-group formIn my-3 bg-lighter p-1 d-flex  align-items-center justify-content-center">
-                  <i className="fa-solid fa-lock fa-2x me-1"></i>
+                  <img src={resetPass} alt="..." className="loginIcons" />
                   <input
                     type="password"
                     className="form-control bg-transparent border-0 ms-2"
@@ -97,7 +91,7 @@ const ResetPass = () => {
                   </p>
                 )}
                 <div className="input-group formIn my-3 bg-lighter p-1 d-flex  align-items-center justify-content-center">
-                  <i className="fa-solid fa-lock fa-2x me-1"></i>
+                  <img src={resetPass} alt="..." className="loginIcons" />
                   <input
                     type="password"
                     className="form-control bg-transparent border-0 ms-2"
@@ -113,7 +107,7 @@ const ResetPass = () => {
                   </p>
                 )}
                 <div className="input-group formIn my-3 bg-lighter p-1 d-flex  align-items-center justify-content-center">
-                  <i className="fa-regular fa-eye fa-2x"></i>
+                  <img src={Otp} alt="..." className="loginIcons" />
                   <input
                     type="text"
                     className="form-control bg-transparent border-0 ms-2"

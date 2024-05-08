@@ -10,9 +10,11 @@ import {
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
 import { mainURL } from "../../../../utils";
-
+import PassEye from "../../../../assets/imgs/animatedPics/view.gif";
+import EmailPic from "../../../../assets/imgs/animatedPics/email.gif";
 const Login = () => {
   const [clicked, setClicked] = useState(false);
+  const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -51,21 +53,19 @@ const Login = () => {
       FailToast(error.response.data.message);
     }
   };
-
+  // className={
+  //   errors?.email || errors?.password
+  //     ? "login-contentError bg-white border border-2 rounded-2 p-4 my-2 "
+  //     : "login-content bg-white border border-2 rounded-2 p-4 my-2"
+  // }
   return (
     <div className="auth-container">
       <div className="bg-overlay vh-100">
         <div className="d-flex align-items-center justify-content-center vh-100">
-          <div
-            className={
-              errors?.email || errors?.password
-                ? "login-contentError bg-white border border-2 rounded-2 p-4 my-2 "
-                : "login-content bg-white border border-2 rounded-2 p-4 my-2"
-            }
-          >
+          <div className="h-auto p-4 bg-white border border-2 rounded-2 login-content">
             <div>
-              <div className="text-center mx-auto mb-1">
-                <img src={Logo} alt="logo" />
+              <div className="text-center mx-auto mb-1 w-75">
+                <img src={Logo} alt="logo" className="w-sm-50" />
               </div>
               <h2 className="loginHead fw-bold fs-2 fa">Login</h2>
               <p className="text-muted">
@@ -74,7 +74,7 @@ const Login = () => {
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
               <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                <i className="fa-regular fa-envelope fa-2x me-1"></i>
+                <img src={EmailPic} alt="..." className="loginIcons" />
                 <input
                   type="text"
                   className="form-control bg-transparent border-0 ms-2"
@@ -92,9 +92,9 @@ const Login = () => {
                 </p>
               )}
               <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                <i className="fa-solid fa-lock fa-2x me-1"></i>
+                <img src={PassEye} alt="..." className="loginIcons" />
                 <input
-                  type="password"
+                  type={showPass ? "text" : "password"}
                   className="form-control bg-transparent border-0 ms-2"
                   placeholder="Enter Your Password"
                   {...register("password", {
@@ -102,6 +102,18 @@ const Login = () => {
                   })}
                   defaultValue="Omar0109585@"
                 />
+                {showPass && (
+                  <i
+                    className="fa fa-eye border-0 pointer-event"
+                    onClick={() => setShowPass(!showPass)}
+                  ></i>
+                )}
+                {!showPass && (
+                  <i
+                    className="fa fa fa-eye-slash border-0 pointer-event"
+                    onClick={() => setShowPass(!showPass)}
+                  ></i>
+                )}
               </div>
 
               {errors?.password && (
@@ -110,7 +122,7 @@ const Login = () => {
                 </p>
               )}
 
-              <div className="mt-3">
+              <div className="mt-3 redirects">
                 <div className="d-flex align-items-center justify-content-between my-4">
                   <NavLink
                     className="text-decoration-none text-secondary fs-6 fw-bold"

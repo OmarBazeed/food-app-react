@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../../../../assets/imgs/logo.png";
+import VerifyPic from "../../../../assets/imgs/animatedPics/verify.gif";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import "animate.css";
@@ -53,7 +54,7 @@ const VerifyAccount = () => {
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
               <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                <i className="fa-regular fa-envelope fa-2x me-1"></i>
+                <img src={VerifyPic} alt="..." className="loginIcons" />
                 <input
                   type="text"
                   className="form-control bg-transparent border-0 ms-2"

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { useNavigate } from "react-router-dom";
 import sideLogo from "../../../../assets/imgs/sideLogo.png";
 import { sidebarContent } from "../../../../utils";
-import { useNavigate } from "react-router-dom";
 import ChangePass from "../../../authenticationModule/components/changePass/ChangePass";
 
 const MySideBar = () => {

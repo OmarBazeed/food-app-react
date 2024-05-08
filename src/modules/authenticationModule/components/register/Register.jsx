@@ -1,5 +1,10 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../../../assets/imgs/logo.png";
+import RegName from "../../../../assets/imgs/animatedPics/regName.gif";
+import EmailPic from "../../../../assets/imgs/animatedPics/email.gif";
+import CountryPic from "../../../../assets/imgs/animatedPics/country.gif";
+import PhonePic from "../../../../assets/imgs/animatedPics/phone.gif";
+import PassEye from "../../../../assets/imgs/animatedPics/view.gif";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import "animate.css";
@@ -13,6 +18,8 @@ import {
 
 const Register = () => {
   const [clicked, setClicked] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [showConPass, setShowConPass] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -47,27 +54,21 @@ const Register = () => {
     <div className="auth-container">
       <div className="bg-overlay vh-100">
         <div className="d-flex align-items-center justify-content-center vh-100">
-          <div
-            className={
-              errors?.email || errors?.password
-                ? "register-contentError bg-white border border-2 rounded-2 p-4 my-2 "
-                : "register-content bg-white border border-2 rounded-2 p-4 my-2"
-            }
-          >
+          <div className="h-auto p-4 bg-white border border-2 rounded-2 register-content">
             <div>
               <div className="text-center mx-auto mb-1">
                 <img src={Logo} alt="logo" />
               </div>
-              <h2 className="loginHead fw-bold fs-2 fa">Register</h2>
+              <h2 className="loginHead fw-bold fs-2">Register</h2>
               <p className="text-muted">
                 Welcome Back! Please enter your details
               </p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
-              <section className="row mw-100 gap-5">
+              <section className="row mw-100 gap-5 registerRow">
                 <div className="row flex-column col-md-6">
-                  <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                    <i className="fa-regular fa-envelope fa-2x me-1"></i>
+                  <div className="input-group formIn my-3 bg-lighter p-2 d-flex align-items-center justify-content-center">
+                    <img src={RegName} alt="..." className="loginIcons" />
                     <input
                       type="text"
                       className="form-control bg-transparent border-0 ms-2"
@@ -83,7 +84,7 @@ const Register = () => {
                     </p>
                   )}
                   <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                    <i className="fa-solid fa-lock fa-2x me-1"></i>
+                    <img src={CountryPic} alt="..." className="loginIcons" />
                     <input
                       type="text"
                       className="form-control bg-transparent border-0 ms-2"
@@ -99,15 +100,27 @@ const Register = () => {
                     </p>
                   )}
                   <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                    <i className="fa-solid fa-lock fa-2x me-1"></i>
+                    <img src={PassEye} alt="..." className="loginIcons" />
                     <input
-                      type="password"
+                      type={showPass ? "text" : "password"}
                       className="form-control bg-transparent border-0 ms-2"
                       placeholder="Enter Your Password"
                       {...register("password", {
                         required: "Password is required",
                       })}
                     />
+                    {showPass && (
+                      <i
+                        className="fa fa-eye border-0 pointer-event"
+                        onClick={() => setShowPass(!showPass)}
+                      ></i>
+                    )}
+                    {!showPass && (
+                      <i
+                        className="fa fa fa-eye-slash border-0 pointer-event"
+                        onClick={() => setShowPass(!showPass)}
+                      ></i>
+                    )}
                   </div>
                   {errors?.password && (
                     <p className="text-white handleErr fw-bold p-2">
@@ -117,7 +130,7 @@ const Register = () => {
                 </div>
                 <div className="row flex-column col-md-6">
                   <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                    <i className="fa-regular fa-envelope fa-2x me-1"></i>
+                    <img src={EmailPic} alt="..." className="loginIcons" />
                     <input
                       type="text"
                       className="form-control bg-transparent border-0 ms-2"
@@ -134,7 +147,7 @@ const Register = () => {
                     </p>
                   )}
                   <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                    <i className="fa-solid fa-lock fa-2x me-1"></i>
+                    <img src={PhonePic} alt="..." className="loginIcons" />
                     <input
                       type="number"
                       className="form-control bg-transparent border-0 ms-2"
@@ -150,15 +163,27 @@ const Register = () => {
                     </p>
                   )}
                   <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                    <i className="fa-solid fa-lock fa-2x me-1"></i>
+                    <img src={PassEye} alt="..." className="loginIcons" />
                     <input
-                      type="password"
+                      type={showConPass ? "text" : "password"}
                       className="form-control bg-transparent border-0 ms-2"
                       placeholder="Confirm Your Password"
                       {...register("confirmPassword", {
                         required: "Confirm Password is required",
                       })}
                     />
+                    {showConPass && (
+                      <i
+                        className="fa fa-eye border-0 pointer-event"
+                        onClick={() => setShowConPass(!showConPass)}
+                      ></i>
+                    )}
+                    {!showConPass && (
+                      <i
+                        className="fa fa fa-eye-slash border-0 pointer-event"
+                        onClick={() => setShowConPass(!showConPass)}
+                      ></i>
+                    )}
                   </div>
                   {errors?.confirmPassword && (
                     <p className="text-white handleErr fw-bold p-2">

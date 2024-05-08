@@ -10,7 +10,7 @@ const Dashboard = () => {
         imgSource={homeImg}
       />
 
-      <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3">
+      <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3 flex-wrap">
         <div>
           <h4 className="fw-bold">
             Fill the <span className="text-success"> Recipes </span> !

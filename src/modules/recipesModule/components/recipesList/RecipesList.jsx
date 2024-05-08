@@ -141,7 +141,7 @@ const RecipesList = () => {
             description="You can now add your items that any user can order it from the Application and you can edit"
             imgSource={recipesImg}
           />
-          <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3">
+          <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3 flex-wrap">
             <div>
               <h4 className="fw-bold">Recipe Table Details</h4>
               <p className="">You can check all details</p>
@@ -156,9 +156,9 @@ const RecipesList = () => {
             </div>
           </div>
 
-          <div className="filtaration container-fluid w-100 my-3">
-            <div className="row">
-              <div className="col-md-6">
+          <div className="filtaration container-fluid w-100 my-3 mx-0 mx-md-4">
+            <div className="row column-gap-2 column-gap-sm-0 ">
+              <div className="col-md-5 my-2 my-md-0">
                 <input
                   type="text"
                   placeholder="Search By Recipe"
@@ -167,7 +167,7 @@ const RecipesList = () => {
                   onChange={(e) => handleFilterObj(e)}
                 />
               </div>
-              <div className="col-md-3">
+              <div className="col-md-3 my-2 my-md-0">
                 <select
                   className="form-control"
                   onChange={(e) => handleFilterObj(e)}
@@ -186,7 +186,7 @@ const RecipesList = () => {
                     })}
                 </select>
               </div>
-              <div className="col-md-3">
+              <div className="col-md-3 my-2 my-md-0">
                 <select
                   className="form-control"
                   onChange={(e) => handleFilterObj(e)}
@@ -208,7 +208,7 @@ const RecipesList = () => {
             </div>
           </div>
 
-          <div className="w-100 p-4 m-auto">
+          <div className="p-4 m-auto w-100 recipeTable">
             <Table hover>
               <thead>
                 <tr>
@@ -225,7 +225,7 @@ const RecipesList = () => {
                 {recipes.length > 0 ? (
                   recipes.map((ele) => {
                     return (
-                      <tr key={ele?.id}>
+                      <tr key={ele?.id} className="tableTr">
                         <td>{ele?.name}</td>
                         <td>
                           {ele?.imagePath ? (
@@ -296,7 +296,7 @@ const RecipesList = () => {
             </Table>
           </div>
 
-          <div className="w-100 paginationSec">
+          <div className="paginationSec w-100">
             <nav aria-label="Page navigation example w-100">
               <ul className="pagination w-100 d-flex align-items-center justify-content-center">
                 <li className="page-item">

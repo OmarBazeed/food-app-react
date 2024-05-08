@@ -105,8 +105,8 @@ const AddUpdateRecipe = ({
   }, []);
   return (
     <div className="p-3 d-flex flex-column align-items-start justify-content-center">
-      <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3">
-        <div>
+      <div className="redirect d-flex flex-wrap align-items-center justify-content-between p-4 mt-3">
+        <div className="">
           <h4 className="fw-bold">
             Fill the <span className="text-success"> Recipes </span> !
           </h4>

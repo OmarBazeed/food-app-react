@@ -7,21 +7,9 @@
   background: linear-gradient(rgba(47, 140, 96, 0.63), rgba(0, 0, 0, 0.62));
 }
 .login-content {
-  width: 746px;
-  height: 500px;
+  width: 746px !important;
 }
-.login-contentError {
-  width: 746px;
-  height: 570px;
-}
-.login-contentForget {
-  width: 746px;
-  height: 490px;
-}
-.login-contentForgetError {
-  width: 746px;
-  height: 520px;
-}
+
 .login-contentReset {
   width: 746px;
   height: 570px;
@@ -32,7 +20,7 @@
 }
 
 .register-content {
-  width: 770px;
+  width: 1058px;
 }
 .formIn {
   background-color: rgba(247, 247, 247, 1);
@@ -46,14 +34,14 @@
 .formIn::after {
   position: absolute;
   top: 7px;
-  left: 53px;
+  left: 48px;
   height: 75%;
   width: 2px;
   background: #c6c7c8;
   content: "";
 }
 .handleErr {
-  background-color: hsl(9, 83%, 52%);
+  background-color: #0dcaf063;
   border-radius: 10px;
   filter: drop-shadow(2px 2px 2px gray);
   animation: headShake 1s 2 ease-in-out alternate;
@@ -66,23 +54,58 @@
   margin: auto;
 }
 
+.loginIcons {
+  font-size: 25px !important;
+  width: 35px !important;
+  height: 35px !important;
+}
+
+@media (max-width: 450px) {
+  .login-content,
+  .register-content {
+    width: 320px !important;
+  }
+  .login-content div div img,
+  .register-content div div img {
+    width: 85%;
+  }
+  .login-content .text-muted,
+  .register-content .text-muted {
+    font-size: 13px !important;
+  }
+  .login-content .redirects a {
+    font-size: 13px !important;
+  }
+  .login-content .head {
+    font-size: 22px !important;
+  }
+
+  .registerRow {
+    gap: 0 !important;
+  }
+  .registerRow div div {
+    padding: 0 !important;
+    margin: 7px 0;
+  }
+}
+
 /*SideBar*/
 
 .sidebar-content .ps-sidebar-container {
   height: 100vh;
   overflow-y: auto;
-  background-color: rgba(31, 38, 62, 1);
+  background: linear-gradient(to left, rgb(31 38 62 / 88%), #6c757deb);
   color: white;
   font-weight: bold;
   border-top-right-radius: 50px;
 }
 .sidebar-content .ps-sidebar-container {
-  background-color: rgba(31, 38, 62, 1);
+  background: linear-gradient(to left, rgb(31 38 62 / 88%), #6c757deb);
   color: white;
   font-weight: bold;
 }
 .sidebar-content ul li:first-of-type a:hover {
-  background-color: transparent !important;
+  background: transparent !important;
 }
 .sidebar-content ul li:not(:first-of-type) a {
   transition: all 0.5s;
@@ -117,7 +140,9 @@
 .header-content {
   background-image: url(./assets/imgs/header-bg-svg.svg);
   background-size: cover;
+  background-position: center;
 }
+
 /*Not Found*/
 .notFound-content {
   background-image: url(./assets/imgs/not-found-bg.png);
@@ -180,4 +205,14 @@ matserLayout
 }
 .viewBtn {
   padding: 0 !important;
+}
+
+/*pagination*/
+.pagination {
+  flex-wrap: wrap !important;
+}
+
+/*notify*/
+.notificationDiv {
+  margin-right: 5px !important;
 }
