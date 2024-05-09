@@ -24,7 +24,7 @@ const ChangePass = ({ openChangeModal, setOpenChangeModal }) => {
     try {
       let res = await axios.put(`${mainURL}/Users/ChangePassword`, data, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          RequestAuthorization,
         },
       });
       SuccessToast(res.data.message);

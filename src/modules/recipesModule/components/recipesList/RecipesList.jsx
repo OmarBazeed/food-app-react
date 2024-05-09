@@ -44,13 +44,11 @@ const RecipesList = () => {
         const FavsArr = JSON.parse(localStorage.getItem("favsArr"));
         if (!FavsArr || FavsArr.length === 0) {
           setRecipes(res.data.data);
-          console.log(res.data.data);
         } else {
           const filteredRecipes = res.data.data.filter(
             (recipe) => !FavsArr.includes(recipe.id)
           );
           setRecipes(filteredRecipes);
-          console.log(res.data.data);
         }
 
         setPaginationNum(

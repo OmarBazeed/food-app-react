@@ -40,7 +40,7 @@ const ForgetPass = () => {
           <div className="h-auto p-4 bg-white border border-2 rounded-2 login-content">
             <div>
               <div className="text-center mx-auto mb-3">
-                <img src={Logo} alt="logo" />
+                <img src={Logo} alt="logo" className="w-75 h-75 RegLogo" />
               </div>
               <h2 className="loginHead fw-bold fs-2 fa my-2 head">
                 Forget Your Password ?
@@ -70,12 +70,12 @@ const ForgetPass = () => {
                 </p>
               )}
 
-              <div className="w-100 mt-5">
+              <div className="mt-4 d-flex justify-content-center">
                 <button
                   className={
                     clicked
-                      ? "btn btn-transparent w-100 fw-bold text-white fs-5 submitBtn"
-                      : "btn btn-success w-100 fw-bold text-white fs-5 submitBtn"
+                      ? "btn btn-transparent w-75 fw-bold submitBtn"
+                      : "btn btn-success w-75 fw-bold submitBtn"
                   }
                   type="submit"
                 >

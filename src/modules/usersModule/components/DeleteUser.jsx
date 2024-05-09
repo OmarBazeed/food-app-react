@@ -22,7 +22,7 @@ const DeleteUser = ({
   const handleDelte = async (id) => {
     try {
       let res = await axios.delete(`${mainURL}/Users/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { RequestAuthorization },
       });
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"

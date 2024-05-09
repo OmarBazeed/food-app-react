@@ -49,9 +49,9 @@ const ResetPass = () => {
             <div className="h-auto p-4 bg-white border border-2 rounded-2 login-content">
               <div>
                 <div className="text-center mx-auto mb-1">
-                  <img src={Logo} alt="logo" />
+                  <img src={Logo} alt="logo" className="w-75 h-75 RegLogo" />
                 </div>
-                <h2 className="loginHead fw-bold fs-2 fa">Reset Password</h2>
+                <h2 className="loginHead fw-bold fs-3 fa">Reset Password</h2>
                 <p className="text-muted">
                   Please Enter Your OTP or Check Your Inbox
                 </p>
@@ -124,12 +124,12 @@ const ResetPass = () => {
                 )}
 
                 <div className="mt-3">
-                  <div className="w-100 mt-4">
+                  <div className="mt-4 d-flex justify-content-center">
                     <button
                       className={
                         clicked
-                          ? "btn btn-transparent w-100 fw-bold text-white fs-5 submitBtn"
-                          : "btn btn-success w-100 fw-bold text-white fs-5 submitBtn"
+                          ? "btn btn-transparent w-75 fw-bold submitBtn"
+                          : "btn btn-success w-75 fw-bold submitBtn"
                       }
                       type="submit"
                     >

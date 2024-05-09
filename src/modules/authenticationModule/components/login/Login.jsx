@@ -1,20 +1,22 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import Logo from "../../../../assets/imgs/logo.png";
-import { useForm } from "react-hook-form";
-import axios from "axios";
 import "animate.css";
-import { useState } from "react";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Bars } from "react-loader-spinner";
+import { NavLink, useNavigate } from "react-router-dom";
+import EmailPic from "../../../../assets/imgs/animatedPics/email.gif";
+import PassEye from "../../../../assets/imgs/animatedPics/view.gif";
+import Logo from "../../../../assets/imgs/logo.png";
+import { AuthContext } from "../../../../context/AuthContext";
+import { mainURL } from "../../../../utils";
 import {
   FailToast,
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
-import { mainURL } from "../../../../utils";
-import PassEye from "../../../../assets/imgs/animatedPics/view.gif";
-import EmailPic from "../../../../assets/imgs/animatedPics/email.gif";
 const Login = () => {
   const [clicked, setClicked] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const { gettingUserData } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const {
@@ -26,11 +28,10 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       let res = await axios.post(`${mainURL}/Users/Login`, data);
-      res.data.token && localStorage.setItem("token", res.data.token);
-
       setClicked(true);
       SuccessToast("Logged In Successfully");
-      checkingUserRole();
+      localStorage.setItem("token", res.data.token);
+      gettingUserData();
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);
@@ -39,25 +40,6 @@ const Login = () => {
     }
   };
 
-  const checkingUserRole = async () => {
-    try {
-      let res = await axios.get(`${mainURL}/Users/currentUser`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      localStorage.getItem("LoggedUserInfo") &&
-        localStorage.removeItem("LoggedUserInfo");
-      localStorage.setItem("LoggedUserInfo", JSON.stringify(res.data));
-    } catch (error) {
-      FailToast(error.response.data.message);
-    }
-  };
-  // className={
-  //   errors?.email || errors?.password
-  //     ? "login-contentError bg-white border border-2 rounded-2 p-4 my-2 "
-  //     : "login-content bg-white border border-2 rounded-2 p-4 my-2"
-  // }
   return (
     <div className="auth-container">
       <div className="bg-overlay vh-100">
@@ -65,7 +47,7 @@ const Login = () => {
           <div className="h-auto p-4 bg-white border border-2 rounded-2 login-content">
             <div>
               <div className="text-center mx-auto mb-1 w-75">
-                <img src={Logo} alt="logo" className="w-sm-50" />
+                <img src={Logo} alt="logo" className="w-75 w-sm-100" />
               </div>
               <h2 className="loginHead fw-bold fs-2 fa">Login</h2>
               <p className="text-muted">
@@ -137,12 +119,12 @@ const Login = () => {
                     Forget Password!
                   </NavLink>
                 </div>
-                <div className="w-100 mt-4">
+                <div className="mt-4 d-flex justify-content-center">
                   <button
                     className={
                       clicked
-                        ? "btn btn-transparent w-100 fw-bold text-white fs-5 submitBtn"
-                        : "btn btn-success w-100 fw-bold text-white fs-5 submitBtn"
+                        ? "btn btn-transparent w-75 fw-bold submitBtn"
+                        : "btn btn-success w-75 fw-bold submitBtn"
                     }
                     type="submit"
                   >

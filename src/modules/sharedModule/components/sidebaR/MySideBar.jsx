@@ -1,15 +1,17 @@
-import { useState } from "react";
+/* eslint-disable no-const-assign */
+import { useContext, useState } from "react";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
-import { useNavigate } from "react-router-dom";
 import sideLogo from "../../../../assets/imgs/sideLogo.png";
+import { AuthContext } from "../../../../context/AuthContext";
 import { sidebarContent } from "../../../../utils";
 import ChangePass from "../../../authenticationModule/components/changePass/ChangePass";
+import { useNavigate } from "react-router-dom";
 
 const MySideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [openChangeModal, setOpenChangeModal] = useState(false);
   const navigate = useNavigate();
-  const loggedUserInfo = JSON.parse(localStorage.getItem("LoggedUserInfo"));
+  const { loggedUserInfo, setLoggedUserInfo } = useContext(AuthContext);
 
   const showingSidebarElements = (ele) => {
     const allowedTitles =
@@ -29,7 +31,7 @@ const MySideBar = () => {
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("LoggedUserInfo");
+    setLoggedUserInfo(null);
     navigate("/");
   };
 

@@ -19,9 +19,11 @@
   height: 730px;
 }
 
-.register-content {
-  width: 1058px;
+.RegLogo {
+  max-width: 366px;
+  height: 104px;
 }
+
 .formIn {
   background-color: rgba(247, 247, 247, 1);
   position: relative;
@@ -59,16 +61,12 @@
   width: 35px !important;
   height: 35px !important;
 }
-
-@media (max-width: 450px) {
+@media (max-width: 575px) {
   .login-content,
   .register-content {
-    width: 320px !important;
+    width: 350px !important;
   }
-  .login-content div div img,
-  .register-content div div img {
-    width: 85%;
-  }
+
   .login-content .text-muted,
   .register-content .text-muted {
     font-size: 13px !important;
@@ -79,13 +77,26 @@
   .login-content .head {
     font-size: 22px !important;
   }
-
-  .registerRow {
-    gap: 0 !important;
-  }
   .registerRow div div {
     padding: 0 !important;
     margin: 7px 0;
+  }
+}
+@media (min-width: 575px) {
+  .submitBtn {
+    width: 100% !important;
+  }
+  .RegLogo {
+    width: 50% !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .register-content {
+    width: 1058px;
+  }
+  .masterOutlet {
+    overflow: hidden;
   }
 }
 

@@ -54,10 +54,10 @@ const Register = () => {
     <div className="auth-container">
       <div className="bg-overlay vh-100">
         <div className="d-flex align-items-center justify-content-center vh-100">
-          <div className="h-auto p-4 bg-white border border-2 rounded-2 register-content">
+          <div className="h-auto w-auto p-4 bg-white border border-2 rounded-2 register-content">
             <div>
               <div className="text-center mx-auto mb-1">
-                <img src={Logo} alt="logo" />
+                <img src={Logo} alt="logo" className="w-75 h-75 RegLogo" />
               </div>
               <h2 className="loginHead fw-bold fs-2">Register</h2>
               <p className="text-muted">
@@ -65,7 +65,7 @@ const Register = () => {
               </p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
-              <section className="row mw-100 gap-5 registerRow">
+              <section className="row mw-100 gap-0 gap-md-5 registerRow">
                 <div className="row flex-column col-md-6">
                   <div className="input-group formIn my-3 bg-lighter p-2 d-flex align-items-center justify-content-center">
                     <img src={RegName} alt="..." className="loginIcons" />
@@ -207,12 +207,12 @@ const Register = () => {
                     Login Now ?
                   </NavLink>
                 </div>
-                <div className="w-100 mt-4">
+                <div className="mt-4 d-flex justify-content-center">
                   <button
                     className={
                       clicked
-                        ? "btn btn-transparent w-100 fw-bold text-white fs-5 submitBtn"
-                        : "btn btn-success w-100 fw-bold text-white fs-5 submitBtn"
+                        ? "btn btn-transparent w-75 fw-bold submitBtn"
+                        : "btn btn-success w-75 fw-bold submitBtn"
                     }
                     type="submit"
                   >

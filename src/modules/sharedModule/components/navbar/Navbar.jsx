@@ -1,10 +1,15 @@
 /* eslint-disable no-unused-vars */
 import { NavLink } from "react-router-dom";
 import avatar from "../../../../assets/imgs/avatar.png";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../../../../context/AuthContext";
 
 /* eslint-disable react/prop-types */
 const Navbar = () => {
-  const loggedUserInfo = JSON.parse(localStorage.getItem("LoggedUserInfo"));
+  const { loggedUserInfo, gettingUserData } = useContext(AuthContext);
+  useEffect(() => {
+    gettingUserData();
+  }, [gettingUserData]);
   return (
     <nav className="navbar navbar-expand-lg bg-light w-100 ms-3 pe-2">
       <div className="container-fluid column-gap-5">

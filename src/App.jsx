@@ -18,7 +18,6 @@ import Userslist from "./modules/usersModule/components/usersList/Userslist";
 import Favorites from "./modules/userPortal/components/favorites/Favorites";
 
 function App() {
-  const loginData = JSON.parse(localStorage.getItem("LoggedUserInfo"));
   const routes = createBrowserRouter([
     {
       path: "/",
@@ -54,7 +53,7 @@ function App() {
     {
       path: "dashboard",
       element: (
-        <GuardedRoute loginData={loginData}>
+        <GuardedRoute>
           <MasterLayout />
         </GuardedRoute>
       ),

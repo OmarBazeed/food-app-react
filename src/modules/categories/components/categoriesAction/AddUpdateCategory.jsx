@@ -8,6 +8,8 @@ import {
   FailToast,
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
+import { AuthContext } from "../../../../context/AuthContext";
+import { useContext } from "react";
 
 const AddUpdateCategory = ({
   getAllCategories,
@@ -18,6 +20,7 @@ const AddUpdateCategory = ({
   updatedCategory,
   catName,
 }) => {
+  const { RequestAuthorization } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -31,7 +34,7 @@ const AddUpdateCategory = ({
   const savingAddCategory = async (data) => {
     try {
       let res = await axios.post(`${mainURL}/Category/`, data, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { RequestAuthorization },
       });
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"
@@ -45,7 +48,7 @@ const AddUpdateCategory = ({
   const savingUpdateCategory = async (data, id) => {
     try {
       let res = await axios.put(`${mainURL}/Category/${id}`, data, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { RequestAuthorization },
       });
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"

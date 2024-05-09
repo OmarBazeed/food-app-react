@@ -15,7 +15,7 @@ const Favorites = () => {
   const fetchFavsList = async () => {
     try {
       let res = await axios.get(`${mainURL}/userRecipe/`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { RequestAuthorization },
       });
       setFavsList(res.data.data);
       const favsListIds = res.data.data.map((ele) => ele.id);
@@ -29,7 +29,7 @@ const Favorites = () => {
   const removeFav = async (fav) => {
     try {
       await axios.delete(`${mainURL}/userRecipe/${fav.id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { RequestAuthorization },
       });
       fetchFavsList();
       SuccessToast("You Deleted This Recipe Successfully");
