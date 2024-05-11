@@ -1,21 +1,21 @@
 /* eslint-disable no-const-assign */
 import { useContext, useState } from "react";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { useNavigate } from "react-router-dom";
 import sideLogo from "../../../../assets/imgs/sideLogo.png";
 import { AuthContext } from "../../../../context/AuthContext";
 import { sidebarContent } from "../../../../utils";
 import ChangePass from "../../../authenticationModule/components/changePass/ChangePass";
-import { useNavigate } from "react-router-dom";
 
 const MySideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [openChangeModal, setOpenChangeModal] = useState(false);
   const navigate = useNavigate();
-  const { loggedUserInfo, setLoggedUserInfo } = useContext(AuthContext);
+  const { loggedUserInfo } = useContext(AuthContext);
 
   const showingSidebarElements = (ele) => {
     const allowedTitles =
-      loggedUserInfo.group?.name === "SystemUser"
+      loggedUserInfo?.group?.name === "SystemUser"
         ? ["Home", "Recipes", "Logout", "WishList"]
         : [
             "Home",
@@ -31,7 +31,6 @@ const MySideBar = () => {
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
-    setLoggedUserInfo(null);
     navigate("/");
   };
 
@@ -42,6 +41,7 @@ const MySideBar = () => {
       setOpenChangeModal(true);
     }
   };
+
   return (
     <>
       {openChangeModal && (

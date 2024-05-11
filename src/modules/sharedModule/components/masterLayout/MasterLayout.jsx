@@ -1,19 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import MySideBar from "../sidebaR/MySideBar";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "../../../../context/AuthContext";
 
-const MasterLayout = ({ loginData }) => {
-  const { loggedUserInfo } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  console.log(loggedUserInfo);
-
-  useEffect(() => {
-    !loggedUserInfo && navigate("/");
-  }, [loggedUserInfo, navigate]);
+const MasterLayout = () => {
   return (
     <div className="container-fluid masterLayout">
       <div className="d-flex justify-content-start">
@@ -21,7 +11,7 @@ const MasterLayout = ({ loginData }) => {
           <MySideBar />
         </div>
         <div className="w-100 vh-100 overflow-y-auto masterOutlet">
-          <Navbar loginData={loginData} />
+          <Navbar />
           <Outlet />
         </div>
       </div>

@@ -9,6 +9,8 @@ import {
   FailToast,
   SuccessToast,
 } from "../../sharedModule/components/toasts/Toast";
+import { useContext } from "react";
+import { AuthContext } from "../../../context/AuthContext";
 
 const DeleteUser = ({
   getAllUsers,
@@ -18,11 +20,11 @@ const DeleteUser = ({
   filterObj,
 }) => {
   const handleClose = () => setOpenDeleteModal(false);
-
+  const { RequestAuthorization } = useContext(AuthContext);
   const handleDelte = async (id) => {
     try {
       let res = await axios.delete(`${mainURL}/Users/${id}`, {
-        headers: { RequestAuthorization },
+        headers: { ...RequestAuthorization },
       });
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"

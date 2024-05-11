@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
 import { createContext, useState } from "react";
@@ -17,10 +18,10 @@ export const AuthContextProvider = (props) => {
     try {
       let res = await axios.get(`${mainURL}/Users/currentUser`, {
         headers: {
-          ...RequestAuthorization,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      setLoggedUserInfo(res.data);
+      localStorage.getItem("token") && setLoggedUserInfo(res.data);
     } catch (error) {
       FailToast(error.response.data.message);
     }

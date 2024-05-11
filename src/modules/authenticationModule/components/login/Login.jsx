@@ -1,6 +1,6 @@
 import "animate.css";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Bars } from "react-loader-spinner";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -13,11 +13,12 @@ import {
   FailToast,
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
+
 const Login = () => {
   const [clicked, setClicked] = useState(false);
   const [showPass, setShowPass] = useState(false);
-  const { gettingUserData } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { gettingUserData } = useContext(AuthContext);
 
   const {
     register,
@@ -39,7 +40,9 @@ const Login = () => {
       FailToast(error.response.data.message);
     }
   };
-
+  useEffect(() => {
+    gettingUserData();
+  }, []);
   return (
     <div className="auth-container">
       <div className="bg-overlay vh-100">

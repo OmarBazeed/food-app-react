@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
 import { mainURL } from "../../../../utils";
@@ -9,6 +9,7 @@ import {
   FailToast,
   SuccessToast,
 } from "../../../sharedModule/components/toasts/Toast";
+import { AuthContext } from "../../../../context/AuthContext";
 
 const AddUpdateRecipe = ({
   addBtnClicked,
@@ -19,10 +20,9 @@ const AddUpdateRecipe = ({
   UpdatedRecipe: { id, name, price, description, tag, category } = {},
   filterObj,
 }) => {
-  const token = localStorage.getItem("token");
   const [tagsList, setTagsList] = useState([]);
   const [categoriesList, setCategories] = useState([]);
-
+  const { RequestAuthorization } = useContext(AuthContext);
   const getAllTags = async () => {
     try {
       let res = await axios.get(`${mainURL}/tag/`);
@@ -35,7 +35,7 @@ const AddUpdateRecipe = ({
     try {
       let res = await axios.get(
         `${mainURL}/Category/?pageSize=10&pageNumber=1`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { ...RequestAuthorization } }
       );
       setCategories(res.data.data);
     } catch (error) {
@@ -69,7 +69,7 @@ const AddUpdateRecipe = ({
     try {
       let res = await axios.post(`${mainURL}/Recipe/`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...RequestAuthorization,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -86,7 +86,7 @@ const AddUpdateRecipe = ({
     try {
       await axios.put(`${mainURL}/Recipe/${+id}`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...RequestAuthorization,
           "Content-Type": "multipart/form-data",
         },
       });

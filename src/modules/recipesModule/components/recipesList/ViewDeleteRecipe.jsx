@@ -2,11 +2,16 @@
 import axios from "axios";
 import PopUpImag from "../../../../assets/imgs/no-data.png";
 import { mainURL } from "../../../../utils";
-
 import { Button, Modal } from "react-bootstrap";
-import { FailToast, SuccessToast } from "../toasts/Toast";
+import {
+  FailToast,
+  SuccessToast,
+} from "../../../sharedModule/components/toasts/Toast";
+import { useContext } from "react";
+import { AuthContext } from "../../../../context/AuthContext";
+import NoRecipeImage from "../../../../assets/imgs/no-data.png";
 
-const DeleteModal = ({
+const ViewDeleteRecipe = ({
   getAllRecipes,
   UpdatedRecipe,
   openDeleteModal,
@@ -16,8 +21,8 @@ const DeleteModal = ({
   recipes,
   setRecipes,
 }) => {
-  const token = localStorage.getItem("token");
-  const loggedUser = JSON.parse(localStorage.getItem("LoggedUserInfo"));
+  const { loggedUserInfo, RequestAuthorization } = useContext(AuthContext);
+
   const handleClose = () => {
     setOpenDeleteModal(false);
     setViewBtnClicked(false);
@@ -26,7 +31,6 @@ const DeleteModal = ({
   const handleDelte = async (UpdatedRecipe) => {
     try {
       let res = await axios.delete(`${mainURL}/Recipe/${UpdatedRecipe.id}`);
-      console.log(res);
       SuccessToast(res.data.message || "You Deleted This Recipe Successfully");
       getAllRecipes({}, 10, 1);
       handleClose();
@@ -43,9 +47,7 @@ const DeleteModal = ({
           recipeId: UpdatedRecipe.id,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { ...RequestAuthorization },
         }
       );
       SuccessToast(`You Added ${res.data.recipe.name} To Favs`);
@@ -56,7 +58,6 @@ const DeleteModal = ({
       console.log(error);
     }
   };
-
   return (
     <>
       <section>
@@ -88,17 +89,21 @@ const DeleteModal = ({
             {viewBtnClicked && (
               <>
                 <img
-                  src={`https://upskilling-egypt.com:3006/${UpdatedRecipe.imagePath}`}
-                  className="w-50 h-50 rounded-3"
+                  src={
+                    UpdatedRecipe.imagePath
+                      ? `https://upskilling-egypt.com:3006/${UpdatedRecipe.imagePath}`
+                      : NoRecipeImage
+                  }
+                  className="w-25 h-25 rounded-3 m-auto"
                 />
                 <div className="d-flex flex-column align-items-start justify-content-start gap-2 mt-3">
-                  {loggedUser.group.name == "SystemUser" ? (
+                  {loggedUserInfo?.group.name == "SystemUser" ? (
                     <p>{UpdatedRecipe.description}</p>
                   ) : (
                     ""
                   )}
 
-                  {loggedUser.group.name !== "SystemUser" ? (
+                  {loggedUserInfo?.group.name !== "SystemUser" ? (
                     <>
                       <p>
                         <span className="fw-bold">Recipe Name </span> :
@@ -128,33 +133,32 @@ const DeleteModal = ({
               </>
             )}
           </Modal.Body>
-          <Modal.Footer>
-            {openDeleteModal && (
-              <Button
-                variant="outline-danger"
-                onClick={() => handleDelte(UpdatedRecipe)}
-              >
-                Delete
-              </Button>
-            )}
-            {viewBtnClicked && (
-              <Button
-                variant="outline-danger"
-                onClick={() => handleAddFavorites(UpdatedRecipe)}
-                className={
-                  loggedUser.group.name == "SystemUser"
-                    ? "d-block !important"
-                    : "d-none !important"
-                }
-              >
-                Favorite
-              </Button>
-            )}
-          </Modal.Footer>
+          {openDeleteModal && (
+            <Button
+              variant="outline-danger"
+              onClick={() => handleDelte(UpdatedRecipe)}
+              className="w-25"
+            >
+              Delete
+            </Button>
+          )}
+          {viewBtnClicked && (
+            <Button
+              variant="outline-danger"
+              onClick={() => handleAddFavorites(UpdatedRecipe)}
+              className={
+                loggedUserInfo?.group.name == "SystemUser"
+                  ? "d-block !important"
+                  : "d-none !important"
+              }
+            >
+              Favorite
+            </Button>
+          )}
         </Modal>
       </section>
     </>
   );
 };
 
-export default DeleteModal;
+export default ViewDeleteRecipe;

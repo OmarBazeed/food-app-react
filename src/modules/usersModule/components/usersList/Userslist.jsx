@@ -1,25 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import usersImg from "../../../../assets/imgs/recipesImg.png";
 import { mainURL } from "../../../../utils";
 import Header from "../../../sharedModule/components/header/Header";
 import NoData from "../../../sharedModule/components/noData/NoData";
 import DeleteUser from "../DeleteUser";
+import { AuthContext } from "../../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Userslist = () => {
   const [usersList, setUsersList] = useState([]);
   const [paginationNum, setPaginationNum] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [id, setId] = useState("");
-  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
   const [filterObj, setFilterObj] = useState({
     userName: "",
     email: "",
     country: "",
     groups: "",
   });
+
+  const { RequestAuthorization, loggedUserInfo, gettingUserData } =
+    useContext(AuthContext);
 
   const handleFilterObj = (e) => {
     const { id, value } = e.target;
@@ -33,41 +39,40 @@ const Userslist = () => {
       setFilterObj((prevFilterObj) => ({ ...prevFilterObj, groups: value }));
   };
 
-  const getAllUsers = useCallback(
-    async (filterObj, pSize, pNumber) => {
-      try {
-        let res = await axios.get(
-          `${mainURL}/Users/?pageSize=${pSize}&pageNumber=${pNumber}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-            params: {
-              userName: filterObj?.userName,
-              email: filterObj?.email,
-              country: filterObj?.country,
-              groups: filterObj?.groups,
-            },
-          }
-        );
-        setUsersList(res.data.data);
-        console.log(res);
-        setPaginationNum(
-          Array(res.data.totalNumberOfPages)
-            .fill()
-            .map((_, i) => i + 1)
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [token]
-  );
+  const getAllUsers = useCallback(async (filterObj, pSize, pNumber) => {
+    try {
+      let res = await axios.get(
+        `${mainURL}/Users/?pageSize=${pSize}&pageNumber=${pNumber}`,
+        {
+          headers: { ...RequestAuthorization },
+          params: {
+            userName: filterObj?.userName,
+            email: filterObj?.email,
+            country: filterObj?.country,
+            groups: filterObj?.groups,
+          },
+        }
+      );
+      setUsersList(res.data.data);
+      setPaginationNum(
+        Array(res.data.totalNumberOfPages)
+          .fill()
+          .map((_, i) => i + 1)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const clearSearch = () => {
     setFilterObj({});
     getAllUsers(filterObj, 10, 1);
   };
   useEffect(() => {
     getAllUsers(filterObj, 10, 1);
-  }, [filterObj]);
+    gettingUserData();
+    loggedUserInfo?.group?.name === "SystemUser" && navigate("/notfound");
+  }, [filterObj, gettingUserData, gettingUserData]);
 
   return (
     <>

@@ -1,6 +1,6 @@
 import Header from "../../../sharedModule/components/header/Header";
 import recipesImg from "../../../../assets/imgs/recipesImg.png";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   FailToast,
   SuccessToast,
@@ -8,18 +8,18 @@ import {
 import { mainURL } from "../../../../utils";
 import axios from "axios";
 import NoData from "../../../sharedModule/components/noData/NoData";
+import { AuthContext } from "../../../../context/AuthContext";
 
 const Favorites = () => {
   const [favsList, setFavsList] = useState([]);
-
+  const { RequestAuthorization } = useContext(AuthContext);
   const fetchFavsList = async () => {
     try {
       let res = await axios.get(`${mainURL}/userRecipe/`, {
-        headers: { RequestAuthorization },
+        headers: { ...RequestAuthorization },
       });
       setFavsList(res.data.data);
       const favsListIds = res.data.data.map((ele) => ele.id);
-      console.log(favsListIds);
       localStorage.setItem("favsArr", JSON.stringify(favsListIds));
     } catch (error) {
       FailToast(error.reponse.data.message);
@@ -29,7 +29,7 @@ const Favorites = () => {
   const removeFav = async (fav) => {
     try {
       await axios.delete(`${mainURL}/userRecipe/${fav.id}`, {
-        headers: { RequestAuthorization },
+        headers: { ...RequestAuthorization },
       });
       fetchFavsList();
       SuccessToast("You Deleted This Recipe Successfully");

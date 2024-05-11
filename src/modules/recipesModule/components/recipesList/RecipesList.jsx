@@ -1,13 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import recipesImg from "../../../../assets/imgs/recipesImg.png";
 import { mainURL } from "../../../../utils";
 import Header from "../../../sharedModule/components/header/Header";
 import NoData from "../../../sharedModule/components/noData/NoData";
-import DeleteModal from "../../../sharedModule/components/popUpModal/DeleteModal";
 import AddUpdateRecipe from "./AddUpdateRecipe";
+import { AuthContext } from "../../../../context/AuthContext";
+import ViewDeleteRecipe from "./ViewDeleteRecipe";
+import deleteRecipeImg from "../../../../assets/imgs/animatedPics/delete.gif";
+import viewRecipeImg from "../../../../assets/imgs/animatedPics/view (2).gif";
+import updateRecipeImg from "../../../../assets/imgs/animatedPics/update-1--unscreen.gif";
 
 const RecipesList = () => {
   const [recipes, setRecipes] = useState([]);
@@ -19,49 +23,45 @@ const RecipesList = () => {
   const [tagsList, setTagsList] = useState([]);
   const [categoriesList, setCategories] = useState([]);
   const [paginationNum, setPaginationNum] = useState([]);
-  const token = localStorage.getItem("token");
-  const loggedUser = JSON.parse(localStorage.getItem("LoggedUserInfo"));
+  const { loggedUserInfo, RequestAuthorization } = useContext(AuthContext);
   const [filterObj, setFilterObj] = useState({
     name: "",
     tagId: "",
     categoryId: "",
   });
 
-  const getAllRecipes = useCallback(
-    async (filterObj, pSize, pNumber) => {
-      try {
-        let res = await axios.get(
-          `${mainURL}/Recipe/?pageSize=${pSize}&pageNumber=${pNumber}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-            params: {
-              name: filterObj?.name,
-              tagId: filterObj?.tagId,
-              categoryId: filterObj?.categoryId,
-            },
-          }
-        );
-        const FavsArr = JSON.parse(localStorage.getItem("favsArr"));
-        if (!FavsArr || FavsArr.length === 0) {
-          setRecipes(res.data.data);
-        } else {
-          const filteredRecipes = res.data.data.filter(
-            (recipe) => !FavsArr.includes(recipe.id)
-          );
-          setRecipes(filteredRecipes);
+  const getAllRecipes = useCallback(async (filterObj, pSize, pNumber) => {
+    try {
+      let res = await axios.get(
+        `${mainURL}/Recipe/?pageSize=${pSize}&pageNumber=${pNumber}`,
+        {
+          headers: { ...RequestAuthorization },
+          params: {
+            name: filterObj?.name,
+            tagId: filterObj?.tagId,
+            categoryId: filterObj?.categoryId,
+          },
         }
-
-        setPaginationNum(
-          Array(res.data.totalNumberOfPages)
-            .fill()
-            .map((_, i) => i + 1)
+      );
+      const FavsArr = JSON.parse(localStorage.getItem("favsArr"));
+      if (!FavsArr || FavsArr.length === 0) {
+        setRecipes(res.data.data);
+      } else {
+        const filteredRecipes = res.data.data.filter(
+          (recipe) => !FavsArr.includes(recipe.id)
         );
-      } catch (error) {
-        console.log(error);
+        setRecipes(filteredRecipes);
       }
-    },
-    [token]
-  );
+
+      setPaginationNum(
+        Array(res.data.totalNumberOfPages)
+          .fill()
+          .map((_, i) => i + 1)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const handleFilterObj = (e) => {
     const { id, value } = e.target;
@@ -89,14 +89,17 @@ const RecipesList = () => {
       try {
         let res = await axios.get(
           `${mainURL}/Category/?pageSize=10&pageNumber=1`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: { ...RequestAuthorization },
+          }
         );
         setCategories(res.data.data);
+        console.log(res.data.data);
       } catch (error) {
         console.log(error);
       }
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     getAllTags();
@@ -107,7 +110,7 @@ const RecipesList = () => {
   return (
     <>
       {openDeleteModal || viewBtnClicked ? (
-        <DeleteModal
+        <ViewDeleteRecipe
           getAllRecipes={getAllRecipes}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
@@ -247,36 +250,39 @@ const RecipesList = () => {
                               setViewBtnClicked(true);
                               setUpdatedRecipe(ele);
                             }}
-                            // disabled={favorites.includes(ele.id)}
                           >
-                            <i
-                              className="me-3 fa-regular fa-eye text-warning"
+                            <img
+                              className="recipeActionIcons"
                               type="button"
-                            ></i>
+                              src={viewRecipeImg}
+                            />
                           </button>
 
-                          {loggedUser.group.name == "SystemUser" ? (
+                          {loggedUserInfo?.group?.name == "SystemUser" ? (
                             ""
                           ) : (
                             <>
-                              <i
-                                className="me-3 fa-solid fa-pen-to-square text-primary"
+                              <img
+                                className="recipeActionIcons"
                                 onClick={() => {
                                   setUpdateBtnClicked(true);
                                   setUpdatedRecipe(ele);
                                 }}
+                                src={updateRecipeImg}
                                 type="button"
-                              ></i>
-                              <i
-                                className="me-3 fa-solid fa-trash text-danger"
+                              />
+                              <img
+                                className="recipeActionIcons me-3"
                                 type="button"
                                 data-bs-toggle="modal"
                                 data-bs-target="#staticBackdrop"
+                                src={deleteRecipeImg}
+                                alt="..."
                                 onClick={() => {
                                   setOpenDeleteModal(true);
                                   setUpdatedRecipe(ele);
                                 }}
-                              ></i>
+                              />
                             </>
                           )}
                         </td>

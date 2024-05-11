@@ -118,6 +118,14 @@
 .sidebar-content ul li:first-of-type a:hover {
   background: transparent !important;
 }
+.sidebar-content ul li:first-of-type a {
+  display: block;
+  margin: 10px auto;
+}
+.sidebar-content ul li:first-of-type a span {
+  width: 176px !important;
+  height: 71px !important;
+}
 .sidebar-content ul li:not(:first-of-type) a {
   transition: all 0.5s;
 }
@@ -126,13 +134,11 @@
   box-shadow: -2px 0px 2px 2px #343a40;
   transform: scale(1.05);
 }
+
 /*navbar*/
 .avatarImg {
   width: 50px;
   height: 50px;
-}
-.searchNav {
-  width: 85% !important;
 }
 .notificationIcon {
   position: relative;
@@ -204,7 +210,12 @@ matserLayout
 .page-item {
   cursor: pointer;
 }
-
+.recipeActionIcons {
+  width: 25px !important;
+  height: 25px !important;
+  display: inline;
+  margin: 0 5px;
+}
 /*favs*/
 .favsCard {
   filter: drop-shadow(2px 2px 2px gray);
@@ -214,9 +225,9 @@ matserLayout
   top: 15px;
   right: 15px;
 }
-.viewBtn {
+/* .viewBtn {
   padding: 0 !important;
-}
+} */
 
 /*pagination*/
 .pagination {
@@ -224,6 +235,3 @@ matserLayout
 }
 
 /*notify*/
-.notificationDiv {
-  margin-right: 5px !important;
-}
