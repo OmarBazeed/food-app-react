@@ -216,9 +216,16 @@ matserLayout
   display: inline;
   margin: 0 5px;
 }
+
+/*** Recipes List**/
+
 /*favs*/
 .favsCard {
   filter: drop-shadow(2px 2px 2px gray);
+  padding: 5px;
+}
+.favsCard .card-body p:last-of-type {
+  word-wrap: normal;
 }
 .favsButton {
   position: absolute;

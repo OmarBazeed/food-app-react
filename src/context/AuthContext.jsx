@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { createContext, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { FailToast } from "../modules/sharedModule/components/toasts/Toast";
 import { mainURL } from "../utils";
 
@@ -14,7 +13,7 @@ export const AuthContextProvider = (props) => {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
-  const gettingUserData = async () => {
+  const gettingUserData = useCallback(async () => {
     try {
       let res = await axios.get(`${mainURL}/Users/currentUser`, {
         headers: {
@@ -25,7 +24,11 @@ export const AuthContextProvider = (props) => {
     } catch (error) {
       FailToast(error.response.data.message);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    gettingUserData();
+  }, [gettingUserData]);
 
   return (
     <AuthContext.Provider

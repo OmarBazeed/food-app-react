@@ -244,19 +244,15 @@ const RecipesList = () => {
                         <td>{ele?.tag.name}</td>
                         <td>{ele?.category[0]?.name}</td>
                         <td>
-                          <button
-                            className="btn btn-transparent viewBtn"
+                          <img
+                            className="recipeActionIcons"
+                            type="button"
+                            src={viewRecipeImg}
                             onClick={() => {
                               setViewBtnClicked(true);
                               setUpdatedRecipe(ele);
                             }}
-                          >
-                            <img
-                              className="recipeActionIcons"
-                              type="button"
-                              src={viewRecipeImg}
-                            />
-                          </button>
+                          />
 
                           {loggedUserInfo?.group?.name == "SystemUser" ? (
                             ""

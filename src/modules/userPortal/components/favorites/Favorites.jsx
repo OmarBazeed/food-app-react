@@ -77,7 +77,7 @@ const Favorites = () => {
                     />
                     <div className="card-body">
                       <p className="card-text fw-bold">{name}</p>
-                      <p className="card-text">{description}</p>
+                      <p className="card-text">{description.slice(50)}</p>
                     </div>
                   </div>
                 </div>

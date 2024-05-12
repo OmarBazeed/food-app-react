@@ -42,7 +42,7 @@ const Login = () => {
   };
   useEffect(() => {
     gettingUserData();
-  }, []);
+  }, [gettingUserData]);
   return (
     <div className="auth-container">
       <div className="bg-overlay vh-100">
