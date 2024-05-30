@@ -4,12 +4,13 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
-import { mainURL } from "../../../../utils";
+
+import { mainURL } from "../../../../../../utils";
 import {
   FailToast,
   SuccessToast,
-} from "../../../sharedModule/components/toasts/Toast";
-import { AuthContext } from "../../../../context/AuthContext";
+} from "../../../../../sharedModule/components/toasts/Toast";
+import { AuthContext } from "../../../../../../context/AuthContext";
 
 const AddUpdateRecipe = ({
   addBtnClicked,

@@ -1,17 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
-import recipesImg from "../../../../assets/imgs/recipesImg.png";
-import { mainURL } from "../../../../utils";
-import Header from "../../../sharedModule/components/header/Header";
-import NoData from "../../../sharedModule/components/noData/NoData";
-import AddUpdateRecipe from "./AddUpdateRecipe";
-import { AuthContext } from "../../../../context/AuthContext";
-import ViewDeleteRecipe from "./ViewDeleteRecipe";
-import deleteRecipeImg from "../../../../assets/imgs/animatedPics/delete.gif";
-import viewRecipeImg from "../../../../assets/imgs/animatedPics/view (2).gif";
-import updateRecipeImg from "../../../../assets/imgs/animatedPics/update-1--unscreen.gif";
+import { AuthContext } from "../../../../../../context/AuthContext";
+import { mainURL } from "../../../../../../utils";
+import Header from "../../../../../sharedModule/components/header/Header";
+import NoData from "../../../../../sharedModule/components/noData/NoData";
+import AddUpdateRecipe from "../recipesActions/AddUpdateRecipe";
+import ViewDeleteRecipe from "../recipesActions/ViewDeleteRecipe";
+import "./Recipes.modules.css";
 
 const RecipesList = () => {
   const [recipes, setRecipes] = useState([]);
@@ -84,6 +80,7 @@ const RecipesList = () => {
       console.log(error);
     }
   }, []);
+
   const getAllCategories = useCallback(async () => {
     {
       try {
@@ -94,7 +91,6 @@ const RecipesList = () => {
           }
         );
         setCategories(res.data.data);
-        console.log(res.data.data);
       } catch (error) {
         console.log(error);
       }
@@ -140,22 +136,27 @@ const RecipesList = () => {
           <Header
             title="Recipes Items"
             description="You can now add your items that any user can order it from the Application and you can edit"
-            imgSource={recipesImg}
           />
-          <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3 flex-wrap">
-            <div>
-              <h4 className="fw-bold">Recipe Table Details</h4>
-              <p className="">You can check all details</p>
-            </div>
-            <div>
-              <button
-                className="btn btn-success p-2"
-                onClick={() => setaAddBtnClicked(true)}
-              >
-                Add New Item
-              </button>
-            </div>
-          </div>
+          {loggedUserInfo?.group?.name != "SystemUser" ? (
+            <>
+              <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3 flex-wrap">
+                <div>
+                  <h4 className="fw-bold">Recipe Table Details</h4>
+                  <p className="">You can check all details</p>
+                </div>
+                <div>
+                  <button
+                    className="btn btn-success p-2"
+                    onClick={() => setaAddBtnClicked(true)}
+                  >
+                    Add New Item
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
 
           <div className="filtaration container-fluid w-100 my-3 mx-0 mx-md-4">
             <div className="row column-gap-2 column-gap-sm-0 ">
@@ -208,94 +209,149 @@ const RecipesList = () => {
               </div>
             </div>
           </div>
-
-          <div className="p-4 m-auto w-100 recipeTable">
-            <Table hover>
-              <thead>
-                <tr>
-                  <th>Item Name</th>
-                  <th>Image</th>
-                  <th>Price</th>
-                  <th>Description</th>
-                  <th>Tag</th>
-                  <th>Category</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+          {/*responsive Recipes */}
+          <div className="p-4 m-auto w-100">
+            <div className={`recipesBody mt-4 `}>
+              <ul className="responsive-table-recipes ">
+                <li className="table-header  ">
+                  <div className="col col-1 ">#</div>
+                  <div role="button" className="col col-2">
+                    Recipe Name
+                  </div>
+                  <div className="col col-3">Image</div>
+                  <div className="col col-4">Price</div>
+                  <div className="col col-5">Description</div>
+                  <div className="col col-6">Category</div>
+                  <div className="col col-7">Tag</div>
+                  <div className="col col-8">Actions</div>
+                </li>
+              </ul>
+              <ul className="responsive-table-recipes">
                 {recipes.length > 0 ? (
-                  recipes.map((ele) => {
-                    return (
-                      <tr key={ele?.id} className="tableTr">
-                        <td>{ele?.name}</td>
-                        <td>
-                          {ele?.imagePath ? (
-                            <img
-                              src={`https://upskilling-egypt.com:3006/${ele.imagePath}`}
-                              alt="..."
-                              style={{ width: "50px", height: "50px" }}
-                            />
-                          ) : (
-                            "no Image"
-                          )}
-                        </td>
-                        <td>{ele?.price}</td>
-                        <td>{ele?.description}</td>
-                        <td>{ele?.tag.name}</td>
-                        <td>{ele?.category[0]?.name}</td>
-                        <td>
+                  recipes.map((item, index) => (
+                    <li key={index} className="table-row  ">
+                      <div className="col col-1 " data-label="#">
+                        {index + 1}
+                      </div>
+                      <div className="col col-2 " data-label="Recipe Name :">
+                        {item.name}
+                      </div>
+                      <div className="col col-3 " data-label="Image :">
+                        {item.imagePath ? (
                           <img
-                            className="recipeActionIcons"
-                            type="button"
-                            src={viewRecipeImg}
-                            onClick={() => {
-                              setViewBtnClicked(true);
-                              setUpdatedRecipe(ele);
-                            }}
+                            className="recipe-img"
+                            src={`https://upskilling-egypt.com:3006/${item.imagePath}`}
+                            alt=""
+                            style={{ width: "70px", height: "60px" }}
                           />
-
-                          {loggedUserInfo?.group?.name == "SystemUser" ? (
+                        ) : (
+                          "no image"
+                        )}
+                      </div>
+                      <div className="col col-4 " data-label="Price :">
+                        {item.price}
+                      </div>
+                      <div className="col col-5 " data-label="Description :">
+                        {item.description}
+                      </div>
+                      <div className="col col-6 " data-label="Category :">
+                        {item.category[0]?.name}
+                      </div>
+                      <div className="col col-7 " data-label="Tag :">
+                        {item.tag.name}
+                      </div>
+                      <div className="col col-8 " data-label="Actions :">
+                        <div className="btn-group">
+                          {window.innerWidth < 650 ? (
                             ""
                           ) : (
-                            <>
-                              <img
-                                className="recipeActionIcons"
+                            <i
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                              className="fa-solid fa-ellipsis"
+                            ></i>
+                          )}
+
+                          <ul
+                            className={`${
+                              window.innerWidth < 650
+                                ? "d-flex  align-items-center  justify-content-center "
+                                : "dropdown-menu dropdown-menu-end"
+                            }  m-0 p-0`}
+                          >
+                            <li
+                              onClick={() => {
+                                setViewBtnClicked(true);
+                                setUpdatedRecipe(item);
+                              }}
+                              role="button"
+                              className="px-3 py-1 pt-2  "
+                            >
+                              <div className="dropdown-div ">
+                                <i className="fa-regular fa-eye me-2"></i>
+                                {window.innerWidth < 650 ? (
+                                  ""
+                                ) : (
+                                  <span>View</span>
+                                )}
+                              </div>
+                            </li>
+                            {loggedUserInfo?.group?.name == "SuperAdmin" ? (
+                              <li
+                                role="button"
                                 onClick={() => {
                                   setUpdateBtnClicked(true);
-                                  setUpdatedRecipe(ele);
+                                  setUpdatedRecipe(item);
                                 }}
-                                src={updateRecipeImg}
-                                type="button"
-                              />
-                              <img
-                                className="recipeActionIcons me-3"
-                                type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#staticBackdrop"
-                                src={deleteRecipeImg}
-                                alt="..."
+                                className="px-3 py-1"
+                              >
+                                <div role="button" className="dropdown-div">
+                                  <i className="fa-regular fa-pen-to-square me-2 "></i>
+                                  {window.innerWidth < 650 ? (
+                                    ""
+                                  ) : (
+                                    <span>Edit</span>
+                                  )}
+                                </div>
+                              </li>
+                            ) : (
+                              ""
+                            )}
+                            {loggedUserInfo?.group?.name == "SuperAdmin" ? (
+                              <li
+                                role="button"
                                 onClick={() => {
                                   setOpenDeleteModal(true);
-                                  setUpdatedRecipe(ele);
+                                  setUpdatedRecipe(item);
                                 }}
-                              />
-                            </>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })
+                                className="px-3 py-1 "
+                              >
+                                <div className="dropdown-div">
+                                  <i className="fa-solid fa-trash-can me-2"></i>
+                                  {window.innerWidth < 650 ? (
+                                    ""
+                                  ) : (
+                                    <span>Delelte</span>
+                                  )}
+                                </div>
+                              </li>
+                            ) : (
+                              ""
+                            )}
+                          </ul>
+                        </div>
+                      </div>
+                    </li>
+                  ))
                 ) : (
-                  <tr>
-                    <td colSpan={7} className="bg-transparent m-auto">
-                      <NoData />
-                    </td>
-                  </tr>
+                  <NoData />
                 )}
-              </tbody>
-            </Table>
+              </ul>
+            </div>
           </div>
+          {/*END Responsive Recipes */}
 
+          {/*Pagination */}
           <div className="paginationSec w-100">
             <nav aria-label="Page navigation example w-100">
               <ul className="pagination w-100 d-flex align-items-center justify-content-center">

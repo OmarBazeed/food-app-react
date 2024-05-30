@@ -1,5 +1,5 @@
 /* eslint-disable no-const-assign */
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { useNavigate } from "react-router-dom";
 import sideLogo from "../../../../assets/imgs/sideLogo.png";
@@ -41,6 +41,22 @@ const MySideBar = () => {
       setOpenChangeModal(true);
     }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 575) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>

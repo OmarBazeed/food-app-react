@@ -56,7 +56,7 @@ const Navbar = () => {
                             : avatar
                         }
                         alt=""
-                        className="avatarImg"
+                        className="avatarImg rounded-circle"
                       />
                       <span className="fw-bold text-capitalize">
                         {loggedUserInfo?.userName}

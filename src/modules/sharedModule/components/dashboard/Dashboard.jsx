@@ -1,11 +1,16 @@
 import { NavLink } from "react-router-dom";
 import homeImg from "../../../../assets/imgs/home-avatar.svg";
 import Header from "../header/Header";
+import { useContext } from "react";
+import { AuthContext } from "../../../../context/AuthContext";
 const Dashboard = () => {
+  const {
+    loggedUserInfo: { userName },
+  } = useContext(AuthContext);
   return (
     <div className="container-fluid">
       <Header
-        title="Welcome Upskilling"
+        title={userName}
         description="This is a welcoming screen for the entry of the application , you can now see the options"
         imgSource={homeImg}
       />

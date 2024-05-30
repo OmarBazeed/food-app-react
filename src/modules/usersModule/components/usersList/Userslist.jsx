@@ -1,19 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
-import usersImg from "../../../../assets/imgs/recipesImg.png";
+import { useNavigate } from "react-router-dom";
+import Usersimg from "../../../../assets/imgs/recipesImg.png";
+import { AuthContext } from "../../../../context/AuthContext";
 import { mainURL } from "../../../../utils";
 import Header from "../../../sharedModule/components/header/Header";
 import NoData from "../../../sharedModule/components/noData/NoData";
-import DeleteUser from "../DeleteUser";
-import { AuthContext } from "../../../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import ViewDeleteUser from "../ViewDeleteUser";
+import "./Users.modules.css";
 
 const Userslist = () => {
   const [usersList, setUsersList] = useState([]);
   const [paginationNum, setPaginationNum] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
+  const [viewedUser, setViewedUser] = useState({});
   const [id, setId] = useState("");
   const navigate = useNavigate();
 
@@ -76,21 +78,26 @@ const Userslist = () => {
 
   return (
     <>
-      {openDeleteModal && (
-        <DeleteUser
+      {openDeleteModal || viewModal ? (
+        <ViewDeleteUser
           getAllUsers={getAllUsers}
           id={id}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
           filterObj={filterObj}
+          viewedUser={viewedUser}
+          viewModal={viewModal}
+          setViewModal={setViewModal}
         />
+      ) : (
+        ""
       )}
 
       <div className="con">
         <Header
           title="Users List"
           description="You can now add your items that any user can order it from the Application and you can edit"
-          imgSource={usersImg}
+          imgSource={Usersimg}
         />
         <div className="redirect d-flex align-items-center justify-content-between p-4 mt-3 bg-transparent">
           <div>
@@ -152,7 +159,7 @@ const Userslist = () => {
           </div>
         </div>
 
-        <div className="w-100 p-4 m-auto">
+        {/* <div className="w-100 p-4 m-auto">
           <Table hover>
             <thead>
               <tr>
@@ -168,14 +175,15 @@ const Userslist = () => {
               {usersList.length > 0 ? (
                 usersList.map((ele) => {
                   return (
-                    <tr key={ele?.id}>
+                    <tr key={ele?.id} className="infoRow">
                       <td>{ele?.userName}</td>
-                      <td>
+                      <td className="userImgRow">
                         {ele?.imagePath ? (
                           <img
                             src={`https://upskilling-egypt.com:3006/${ele.imagePath}`}
                             alt="..."
-                            style={{ width: "50px", height: "50px" }}
+                            style={{ width: "60px", height: "60px" }}
+                            className="rounded-circle userImage"
                           />
                         ) : (
                           "no Image"
@@ -185,20 +193,26 @@ const Userslist = () => {
                       <td>{ele?.country}</td>
                       <td>{ele?.phoneNumber}</td>
                       <td>
-                        <i
-                          className="me-3 fa-regular fa-eye text-warning"
+                        <img
+                          className="recipeActionIcons"
                           type="button"
-                        ></i>
-                        <i
-                          className="me-3 fa-solid fa-trash text-danger"
+                          src={viewUserImg}
+                          onClick={() => {
+                            setViewModal(true);
+                            console.log(viewModal);
+                            setViewedUser(ele);
+                          }}
+                        />
+                        <img
+                          className="recipeActionIcons"
                           type="button"
-                          data-bs-toggle="modal"
-                          data-bs-target="#staticBackdrop"
+                          src={deleteUserImg}
                           onClick={() => {
                             setOpenDeleteModal(true);
+                            console.log(openDeleteModal);
                             setId(ele.id);
                           }}
-                        ></i>
+                        />
                       </td>
                     </tr>
                   );
@@ -212,7 +226,149 @@ const Userslist = () => {
               )}
             </tbody>
           </Table>
+        </div> */}
+        {/*responsive Recipes */}
+        <div className="p-4 m-auto w-100">
+          <div className={`recipesBody mt-4 `}>
+            <ul className="responsive-table-recipes ">
+              <li className="table-header  ">
+                <div className="col col-1 ">#</div>
+                <div role="button" className="col col-2">
+                  User Name
+                </div>
+                <div className="col col-3">Image</div>
+                <div className="col col-4">Country</div>
+                <div className="col col-5">Email</div>
+                <div className="col col-6">phoneNumber</div>
+                <div className="col col-7">Actions</div>
+              </li>
+            </ul>
+            <ul className="responsive-table-recipes">
+              {usersList.length > 0 ? (
+                usersList.map((item, index) => {
+                  console.log(item.imagePath);
+                  return (
+                    <li key={index} className="table-row  ">
+                      <div className="col col-1 " data-label="#">
+                        {index + 1}
+                      </div>
+                      <div className="col col-2 " data-label="Recipe Name :">
+                        {item.userName}
+                      </div>
+                      <div className="col col-3 " data-label="Image :">
+                        {item.imagePath != null ? (
+                          <img
+                            className="recipe-img rounded-5"
+                            src={`https://upskilling-egypt.com:3006/${item.imagePath}`}
+                            alt=""
+                            style={{ width: "60px", height: "60px" }}
+                          />
+                        ) : (
+                          "no image"
+                        )}
+                      </div>
+                      <div className="col col-4" data-label="price :">
+                        {item.country}
+                      </div>
+                      <div className="col col-5" data-label="Price :">
+                        {item.email}
+                      </div>
+                      <div className="col col-6" data-label="Tag :">
+                        {item.phoneNumber}
+                      </div>
+                      <div className="col col-7" data-label="Actions :">
+                        <div className="btn-group">
+                          {window.innerWidth < 650 ? (
+                            ""
+                          ) : (
+                            <i
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                              className="fa-solid fa-ellipsis"
+                            ></i>
+                          )}
+
+                          <ul
+                            className={`${
+                              window.innerWidth < 650
+                                ? "d-flex  align-items-center  justify-content-center "
+                                : "dropdown-menu dropdown-menu-end"
+                            }  m-0 p-0`}
+                          >
+                            <li
+                              onClick={() => {
+                                setViewModal(true);
+                                setViewedUser(item);
+                              }}
+                              role="button"
+                              className="px-3 py-1 pt-2  "
+                            >
+                              <div className="dropdown-div ">
+                                <i className="fa-regular fa-eye me-2"></i>
+                                {window.innerWidth < 650 ? (
+                                  ""
+                                ) : (
+                                  <span>View</span>
+                                )}
+                              </div>
+                            </li>
+                            {/* {loggedUserInfo?.group?.name == "SuperAdmin" ? (
+                            <li
+                              role="button"
+                              onClick={() => {
+                                setUpdateBtnClicked(true);
+                                setUpdatedRecipe(item);
+                              }}
+                              className="px-3 py-1"
+                            >
+                              <div role="button" className="dropdown-div">
+                                <i className="fa-regular fa-pen-to-square me-2 "></i>
+                                {window.innerWidth < 650 ? (
+                                  ""
+                                ) : (
+                                  <span>Edit</span>
+                                )}
+                              </div>
+                            </li>
+                          ) : (
+                            ""
+                          )} */}
+                            {loggedUserInfo?.group?.name == "SuperAdmin" ? (
+                              <li
+                                role="button"
+                                onClick={() => {
+                                  setOpenDeleteModal(true);
+                                  setId(item.id);
+                                  setViewedUser(item);
+                                }}
+                                className="px-3 py-1 "
+                              >
+                                <div className="dropdown-div">
+                                  <i className="fa-solid fa-trash-can me-2"></i>
+                                  {window.innerWidth < 650 ? (
+                                    ""
+                                  ) : (
+                                    <span>Delelte</span>
+                                  )}
+                                </div>
+                              </li>
+                            ) : (
+                              ""
+                            )}
+                          </ul>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })
+              ) : (
+                <NoData />
+              )}
+            </ul>
+          </div>
         </div>
+        {/*END Responsive usersList */}
+
         <div className="w-100 paginationSec">
           <nav aria-label="Page navigation example w-100">
             <ul className="pagination w-100 d-flex align-items-center justify-content-center">

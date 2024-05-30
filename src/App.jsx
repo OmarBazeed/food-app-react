@@ -8,7 +8,7 @@ import Register from "./modules/authenticationModule/components/register/Registe
 import ResetPass from "./modules/authenticationModule/components/resetPass/ResetPass";
 import VerifyAccount from "./modules/authenticationModule/components/verifyAccount/VerifyAccount";
 import CategoriesList from "./modules/categories/components/categoriesList/CategoriesList";
-import RecipesList from "./modules/recipesModule/components/recipesList/RecipesList";
+
 import AuthLayout from "./modules/sharedModule/components/authLayout/AuthLayout";
 import Dashboard from "./modules/sharedModule/components/dashboard/Dashboard";
 import GuardedRoute from "./modules/sharedModule/components/guardedRoute/GuardedRoute";
@@ -16,6 +16,7 @@ import MasterLayout from "./modules/sharedModule/components/masterLayout/MasterL
 import NotFound from "./modules/sharedModule/components/notFound/NotFound";
 import Userslist from "./modules/usersModule/components/usersList/Userslist";
 import Favorites from "./modules/userPortal/components/favorites/Favorites";
+import RecipesList from "./modules/recipesModule/components/recipesList/components/recipiesList/RecipesList";
 
 function App() {
   const routes = createBrowserRouter([

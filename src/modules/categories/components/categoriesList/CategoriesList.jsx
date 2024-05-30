@@ -1,48 +1,47 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { useCallback, useContext, useEffect, useState } from "react";
 import recipesImg from "../../../../assets/imgs/recipesImg.png";
+import { AuthContext } from "../../../../context/AuthContext";
 import { mainURL } from "../../../../utils";
 import Header from "../../../sharedModule/components/header/Header";
 import NoData from "../../../sharedModule/components/noData/NoData";
 import AddUpdateCategory from "../categoriesAction/AddUpdateCategory";
 import DeleteCategory from "../categoriesAction/DeleteCategory";
+import "./Categories.modules.css";
 const CategoriesList = () => {
   const [categories, setCategories] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openViewModal, setOpenViewModal] = useState(false);
   const [addBtnClicked, setaAddBtnClicked] = useState(false);
   const [updateBtnClicked, setUpdateBtnClicked] = useState(false);
   const [updatedCategory, setUpdatedCategory] = useState({});
   const [paginationNum, setPaginationNum] = useState([]);
   const [catName, setCatName] = useState("");
-  const token = localStorage.getItem("token");
+  const { RequestAuthorization } = useContext(AuthContext);
   const [id, setId] = useState("");
 
-  const getAllCategories = useCallback(
-    async (catName, pSize, pNumbers) => {
-      try {
-        let res = await axios.get(
-          `${mainURL}/Category/?pageSize=${pSize}&pageNumber=${pNumbers}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-            params: {
-              name: catName,
-            },
-          }
-        );
-        setCategories(res.data.data);
-        setPaginationNum(
-          Array(res.data.totalNumberOfPages)
-            .fill()
-            .map((_, i) => i + 1)
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [token]
-  );
+  const getAllCategories = useCallback(async (catName, pSize, pNumbers) => {
+    try {
+      let res = await axios.get(
+        `${mainURL}/Category/?pageSize=${pSize}&pageNumber=${pNumbers}`,
+        {
+          headers: { ...RequestAuthorization },
+          params: {
+            name: catName,
+          },
+        }
+      );
+      setCategories(res.data.data);
+      setPaginationNum(
+        Array(res.data.totalNumberOfPages)
+          .fill()
+          .map((_, i) => i + 1)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const handleChangeName = (e) => {
     const { value } = e.target;
@@ -54,14 +53,19 @@ const CategoriesList = () => {
 
   return (
     <>
-      {openDeleteModal && (
+      {openDeleteModal || openViewModal ? (
         <DeleteCategory
           getAllCategories={getAllCategories}
           id={id}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
+          openViewModal={openViewModal}
+          setOpenViewModal={setOpenViewModal}
+          updatedCategory={updatedCategory}
           catName={catName}
         />
+      ) : (
+        ""
       )}
       {(addBtnClicked || updateBtnClicked) && (
         <AddUpdateCategory
@@ -107,60 +111,122 @@ const CategoriesList = () => {
             </div>
           </div>
         </div>
-
-        <div className="w-100 p-4">
-          <Table hover responsive>
-            <thead style={{ backgroundColor: "blue" }}>
-              <tr>
-                <th>Item Name</th>
-                <th></th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+        {/*responsive Recipes */}
+        <div className="p-4 m-auto w-100">
+          <div className={`recipesBody mt-4 `}>
+            <ul className="responsive-table-recipes ">
+              <li className="table-header  ">
+                <div className="col col-1 ">#</div>
+                <div role="button" className="col col-2">
+                  Category Name
+                </div>
+                <div className="col col-3"></div>
+                <div className="col col-8">Actions</div>
+              </li>
+            </ul>
+            <ul className="responsive-table-recipes">
               {categories.length > 0 ? (
-                categories.map((ele) => {
-                  const date = new Date(ele?.creationDate).toLocaleString();
+                categories.map((item, index) => {
+                  const date = new Date(item?.creationDate).toLocaleDateString(
+                    "en-US"
+                  );
                   return (
-                    <tr key={ele?.id}>
-                      <td>{ele?.name}</td>
-                      <td>{date}</td>
-                      <td>
-                        <i
-                          className="me-3 fa-regular fa-eye text-warning"
-                          type="button"
-                        ></i>
-                        <i
-                          className="me-3 fa-solid fa-pen-to-square text-primary"
-                          onClick={() => {
-                            setUpdateBtnClicked(true);
-                            setId(ele.id);
-                            setUpdatedCategory(ele);
-                          }}
-                          type="button"
-                        ></i>
-                        <i
-                          className="me-3 fa-solid fa-trash text-danger"
-                          type="button"
-                          data-bs-toggle="modal"
-                          data-bs-target="#staticBackdrop"
-                          onClick={() => {
-                            setOpenDeleteModal(true);
-                            setId(ele.id);
-                          }}
-                        ></i>
-                      </td>
-                    </tr>
+                    <li key={index} className="table-row  ">
+                      <div className="col col-1 " data-label="#">
+                        {index + 1}
+                      </div>
+                      <div className="col col-2 " data-label="Category Name :">
+                        {item.name}
+                      </div>
+                      <div className="col col-7 " data-label="Tag :">
+                        {date}
+                      </div>
+                      <div className="col col-8 " data-label="Actions :">
+                        <div className="btn-group">
+                          {window.innerWidth < 650 ? (
+                            ""
+                          ) : (
+                            <i
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                              className="fa-solid fa-ellipsis"
+                            ></i>
+                          )}
+
+                          <ul
+                            className={`${
+                              window.innerWidth < 650
+                                ? "d-flex  align-items-center  justify-content-center "
+                                : "dropdown-menu dropdown-menu-end"
+                            }  m-0 p-0`}
+                          >
+                            <li
+                              onClick={() => {
+                                setOpenViewModal(true);
+                                setUpdatedCategory(item);
+                              }}
+                              role="button"
+                              className="px-3 py-1 pt-2  "
+                            >
+                              <div className="dropdown-div ">
+                                <i className="fa-regular fa-eye me-2"></i>
+                                {window.innerWidth < 650 ? (
+                                  ""
+                                ) : (
+                                  <span>View</span>
+                                )}
+                              </div>
+                            </li>
+
+                            <li
+                              role="button"
+                              onClick={() => {
+                                setUpdateBtnClicked(true);
+                                setId(item.id);
+                                setUpdatedCategory(item);
+                              }}
+                              className="px-3 py-1"
+                            >
+                              <div role="button" className="dropdown-div">
+                                <i className="fa-regular fa-pen-to-square me-2 "></i>
+                                {window.innerWidth < 650 ? (
+                                  ""
+                                ) : (
+                                  <span>Edit</span>
+                                )}
+                              </div>
+                            </li>
+
+                            <li
+                              role="button"
+                              onClick={() => {
+                                setOpenDeleteModal(true);
+                                setId(item.id);
+                              }}
+                              className="px-3 py-1 "
+                            >
+                              <div className="dropdown-div">
+                                <i className="fa-solid fa-trash-can me-2"></i>
+                                {window.innerWidth < 650 ? (
+                                  ""
+                                ) : (
+                                  <span>Delelte</span>
+                                )}
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </li>
                   );
                 })
               ) : (
-                <div className="w-100 m-auto text-center">
-                  <NoData />
-                </div>
+                <NoData />
               )}
-            </tbody>
-          </Table>
+            </ul>
+          </div>
         </div>
+        {/*END Responsive categories */}
 
         <div className="w-100 paginationSec">
           <nav aria-label="Page navigation example w-100">

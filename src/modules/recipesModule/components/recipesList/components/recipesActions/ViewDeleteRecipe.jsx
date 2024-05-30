@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import PopUpImag from "../../../../assets/imgs/no-data.png";
-import { mainURL } from "../../../../utils";
+import PopUpImag from "../../../../../../assets/imgs/no-data.png";
 import { Button, Modal } from "react-bootstrap";
+import { useContext } from "react";
+import NoRecipeImage from "../../../../../../assets/imgs/no-data.png";
+import { AuthContext } from "../../../../../../context/AuthContext";
+import { mainURL } from "../../../../../../utils";
 import {
   FailToast,
   SuccessToast,
-} from "../../../sharedModule/components/toasts/Toast";
-import { useContext } from "react";
-import { AuthContext } from "../../../../context/AuthContext";
-import NoRecipeImage from "../../../../assets/imgs/no-data.png";
+} from "../../../../../sharedModule/components/toasts/Toast";
 
 const ViewDeleteRecipe = ({
   getAllRecipes,
@@ -78,7 +78,7 @@ const ViewDeleteRecipe = ({
           <Modal.Body>
             {openDeleteModal && (
               <>
-                <img src={PopUpImag} alt="..." />
+                <img src={PopUpImag} alt="..." className="m-auto" />
                 <h4 className="fw-bold my-3">Delete This Item ?</h4>
                 <p className="text-muted">
                   are you sure you want to delete this item ? if you are sure
@@ -94,7 +94,7 @@ const ViewDeleteRecipe = ({
                       ? `https://upskilling-egypt.com:3006/${UpdatedRecipe.imagePath}`
                       : NoRecipeImage
                   }
-                  className="w-25 h-25 rounded-3 m-auto"
+                  className="w-50 h-50 rounded-3 m-auto"
                 />
                 <div className="d-flex flex-column align-items-start justify-content-start gap-2 mt-3">
                   {loggedUserInfo?.group.name == "SystemUser" ? (
@@ -135,16 +135,16 @@ const ViewDeleteRecipe = ({
           </Modal.Body>
           {openDeleteModal && (
             <Button
-              variant="outline-danger"
+              variant="outline-danger  ms-auto"
               onClick={() => handleDelte(UpdatedRecipe)}
-              className="w-25"
+              className="w-25 ms-auto"
             >
               Delete
             </Button>
           )}
           {viewBtnClicked && (
             <Button
-              variant="outline-danger"
+              variant="outline-danger ms-auto"
               onClick={() => handleAddFavorites(UpdatedRecipe)}
               className={
                 loggedUserInfo?.group.name == "SystemUser"

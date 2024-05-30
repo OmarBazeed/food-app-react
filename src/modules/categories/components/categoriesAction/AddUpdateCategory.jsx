@@ -34,7 +34,7 @@ const AddUpdateCategory = ({
   const savingAddCategory = async (data) => {
     try {
       let res = await axios.post(`${mainURL}/Category/`, data, {
-        headers: { RequestAuthorization },
+        headers: { ...RequestAuthorization },
       });
       SuccessToast(
         res.data.message || "You Deleted This Category Successfully"
@@ -48,10 +48,10 @@ const AddUpdateCategory = ({
   const savingUpdateCategory = async (data, id) => {
     try {
       let res = await axios.put(`${mainURL}/Category/${id}`, data, {
-        headers: { RequestAuthorization },
+        headers: { ...RequestAuthorization },
       });
       SuccessToast(
-        res.data.message || "You Deleted This Category Successfully"
+        res.data.message || "You Updated This Category Successfully"
       );
       getAllCategories(catName, 10, 1);
       handleClose();

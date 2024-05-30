@@ -9,6 +9,7 @@ import { mainURL } from "../../../../utils";
 import axios from "axios";
 import NoData from "../../../sharedModule/components/noData/NoData";
 import { AuthContext } from "../../../../context/AuthContext";
+import NoImage from "../../../../assets/imgs/no-data.png";
 
 const Favorites = () => {
   const [favsList, setFavsList] = useState([]);
@@ -53,12 +54,12 @@ const Favorites = () => {
       />
 
       <div className="container my-4">
-        <div className="row">
+        <div className="row flex-wrap">
           {favsList.length > 0 ? (
             favsList.map((fav) => {
               const { description, name, imagePath } = fav.recipe;
               return (
-                <div className="col-md-3" key={fav.recipe.id}>
+                <div className="col-md-4 mb-3" key={fav.recipe.id}>
                   <div
                     className="card favsCard"
                     style={{ width: "18rem", height: "400px" }}
@@ -70,11 +71,15 @@ const Favorites = () => {
                     >
                       <i className="fa fa-heart text-warning"></i>
                     </button>
-                    <img
-                      src={`https://upskilling-egypt.com:3006/${imagePath}`}
-                      className="card-img-top"
-                      alt="..."
-                    />
+                    {imagePath != null ? (
+                      <img
+                        src={`https://upskilling-egypt.com:3006/${imagePath}`}
+                        alt="Recipe Image"
+                        className="m-auto h-100 w-100"
+                      />
+                    ) : (
+                      <img src={NoImage} alt="No Data" className="m-auto" />
+                    )}
                     <div className="card-body">
                       <p className="card-text fw-bold">{name}</p>
                       <p className="card-text">{description.slice(50)}</p>

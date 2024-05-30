@@ -232,13 +232,25 @@ matserLayout
   top: 15px;
   right: 15px;
 }
-/* .viewBtn {
-  padding: 0 !important;
-} */
 
 /*pagination*/
 .pagination {
   flex-wrap: wrap !important;
 }
 
-/*notify*/
+/*General*/
+.modal-content {
+  padding: 8px;
+}
+
+.infoRow:hover .userImage {
+  transform: scale(1.1);
+  box-shadow: 2px 2px 10px gray;
+}
+
+.userImage {
+  filter: drop-shadow(2px 2px 2px gray);
+  border: 1px solid black;
+  padding: 2px;
+  transition: all 0.5s;
+}
