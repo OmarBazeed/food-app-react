@@ -19,7 +19,6 @@ const AddUpdateRecipe = ({
   updateBtnClicked,
   setUpdateBtnClicked,
   UpdatedRecipe: { id, name, price, description, tag, category } = {},
-  filterObj,
 }) => {
   const [tagsList, setTagsList] = useState([]);
   const [categoriesList, setCategories] = useState([]);
@@ -76,7 +75,7 @@ const AddUpdateRecipe = ({
       });
       SuccessToast(res.data.message);
       reset();
-      getAllRecipes(filterObj, 10, 1);
+      getAllRecipes("", 10, 1);
       handleCancel();
     } catch (error) {
       FailToast(error.response.data.message);
@@ -93,7 +92,7 @@ const AddUpdateRecipe = ({
       });
       SuccessToast("You Updated This Recipe Successfully");
       reset();
-      getAllRecipes(filterObj, 10, 1);
+      getAllRecipes("", 10, 1);
       handleCancel();
     } catch (error) {
       FailToast(error.response.data.message);
