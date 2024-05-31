@@ -1,10 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
-
 import { mainURL } from "../../../../../../utils";
 import {
   FailToast,
@@ -23,6 +21,7 @@ const AddUpdateRecipe = ({
   const [tagsList, setTagsList] = useState([]);
   const [categoriesList, setCategories] = useState([]);
   const { RequestAuthorization } = useContext(AuthContext);
+
   const getAllTags = async () => {
     try {
       let res = await axios.get(`${mainURL}/tag/`);
@@ -31,6 +30,7 @@ const AddUpdateRecipe = ({
       console.log(error);
     }
   };
+
   const getAllCategories = async () => {
     try {
       let res = await axios.get(
@@ -47,6 +47,7 @@ const AddUpdateRecipe = ({
     setUpdateBtnClicked(false);
     setaAddBtnClicked(false);
   };
+
   const {
     register,
     handleSubmit,
@@ -62,9 +63,13 @@ const AddUpdateRecipe = ({
     formData.append("categoriesIds", data.categoriesIds);
     formData.append("description", data.description);
     formData.append("recipeImage", data.recipeImage[0]);
-    (await addBtnClicked) && SavingAddRecipe(formData);
-    (await updateBtnClicked) && SavingUpdateRecipe(formData, id);
+    if (addBtnClicked) {
+      await SavingAddRecipe(formData);
+    } else if (updateBtnClicked) {
+      await SavingUpdateRecipe(formData, id);
+    }
   };
+
   const SavingAddRecipe = async (formData) => {
     try {
       let res = await axios.post(`${mainURL}/Recipe/`, formData, {
@@ -84,7 +89,7 @@ const AddUpdateRecipe = ({
 
   const SavingUpdateRecipe = async (formData, id) => {
     try {
-      await axios.put(`${mainURL}/Recipe/${+id}`, formData, {
+      await axios.put(`${mainURL}/Recipe/${id}`, formData, {
         headers: {
           ...RequestAuthorization,
           "Content-Type": "multipart/form-data",
@@ -103,6 +108,19 @@ const AddUpdateRecipe = ({
     getAllTags();
     getAllCategories();
   }, []);
+
+  useEffect(() => {
+    if (updateBtnClicked) {
+      reset({
+        name,
+        price,
+        description,
+        tagId: tag?.id,
+        categoriesIds: category?.map((c) => c.id),
+      });
+    }
+  }, [updateBtnClicked, name, price, description, tag, category, reset]);
+
   return (
     <div className="p-3 d-flex flex-column align-items-start justify-content-center">
       <div className="redirect d-flex flex-wrap align-items-center justify-content-between p-4 mt-3">
@@ -140,7 +158,6 @@ const AddUpdateRecipe = ({
               {...register("name", {
                 required: "Name Is Required",
               })}
-              defaultValue={updateBtnClicked ? name : ""}
             />
           </div>
           {errors?.name && (
@@ -153,25 +170,16 @@ const AddUpdateRecipe = ({
               {...register("tagId", {
                 required: "TagId Is Required",
               })}
-              defaultValue={tag?.name}
             >
-              {addBtnClicked && (
-                <option value="" selected disabled>
-                  Tag
-                </option>
-              )}
+              <option value="" disabled>
+                Tag
+              </option>
               {tagsList?.length > 0 &&
-                tagsList.map((taG) => {
-                  return (
-                    <option
-                      key={taG.id}
-                      value={taG.id}
-                      selected={updateBtnClicked && tag.name == taG.name}
-                    >
-                      {taG.name}
-                    </option>
-                  );
-                })}
+                tagsList.map((taG) => (
+                  <option key={taG.id} value={taG.id}>
+                    {taG.name}
+                  </option>
+                ))}
             </select>
           </div>
           {errors?.tagId && (
@@ -186,7 +194,6 @@ const AddUpdateRecipe = ({
               {...register("price", {
                 required: "Price Is Required",
               })}
-              defaultValue={updateBtnClicked ? price : ""}
             />
           </div>
           {errors?.price && (
@@ -205,25 +212,16 @@ const AddUpdateRecipe = ({
                 required: "CategoriesIds Is Required",
               })}
               id="catogery"
-              defaultValue={category?.length > 0 ? category[0].name : ""}
             >
-              {addBtnClicked && (
-                <option value="" selected disabled>
-                  Category
-                </option>
-              )}
+              <option value="" disabled>
+                Category
+              </option>
               {categoriesList?.length > 0 &&
-                categoriesList.map((cate) => {
-                  return (
-                    <option
-                      key={cate.id}
-                      value={cate.id}
-                      selected={updateBtnClicked && cate.id == category[0]?.id}
-                    >
-                      {cate.id}
-                    </option>
-                  );
-                })}
+                categoriesList.map((cate) => (
+                  <option key={cate.id} value={cate.id}>
+                    {cate.name}
+                  </option>
+                ))}
             </select>
             {errors?.categoriesIds && (
               <p className="text-white handleErr fw-bold p-2">
@@ -241,7 +239,6 @@ const AddUpdateRecipe = ({
               {...register("description", {
                 required: "Description Is Required",
               })}
-              defaultValue={updateBtnClicked ? description : ""}
             ></textarea>
             <label htmlFor="floatingTextarea">
               description <span className="text-danger">*</span>

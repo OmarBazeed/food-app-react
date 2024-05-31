@@ -202,6 +202,7 @@ const CategoriesList = () => {
                               onClick={() => {
                                 setOpenDeleteModal(true);
                                 setId(item.id);
+                                setUpdatedCategory(item);
                               }}
                               className="px-3 py-1 "
                             >

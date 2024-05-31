@@ -176,7 +176,7 @@ const RecipesList = () => {
                   id="tagId"
                 >
                   <option value="" selected>
-                    CategoryId
+                    Tag
                   </option>
                   {tagsList?.length > 0 &&
                     tagsList.map((tag) => {
@@ -195,7 +195,7 @@ const RecipesList = () => {
                   id="categoryId"
                 >
                   <option value="" selected>
-                    Tag
+                    CategoryId
                   </option>
                   {categoriesList?.length > 0 &&
                     categoriesList.map((cate) => {
@@ -239,7 +239,7 @@ const RecipesList = () => {
                       <div className="col col-3 " data-label="Image :">
                         {item.imagePath ? (
                           <img
-                            className="recipe-img"
+                            className="recipe-img rounded-5"
                             src={`https://upskilling-egypt.com:3006/${item.imagePath}`}
                             alt=""
                             style={{ width: "70px", height: "60px" }}

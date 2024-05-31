@@ -67,7 +67,12 @@ const ViewDeleteRecipe = ({
           className="text-center m-auto"
         >
           <Modal.Header>
-            <h4 className="text-capitalize">recipe details</h4>
+            <h3 className="text-capitalize">
+              <span className="text-danger me-2">
+                {openDeleteModal ? "Delete" : "View"}
+              </span>
+              Recipe
+            </h3>
             <Button
               variant="outline-danger ms-auto rounded-circle"
               onClick={() => handleClose()}
@@ -79,13 +84,17 @@ const ViewDeleteRecipe = ({
             {openDeleteModal && (
               <>
                 <img src={PopUpImag} alt="..." className="m-auto" />
-                <h4 className="fw-bold my-3">Delete This Item ?</h4>
+                <h4 className="fw-bold my-3">
+                  Delete This{" "}
+                  <span className="text-danger">{UpdatedRecipe.name} </span> ?
+                </h4>
                 <p className="text-muted">
                   are you sure you want to delete this item ? if you are sure
                   just click on delete it
                 </p>
               </>
             )}
+
             {viewBtnClicked && (
               <>
                 <img

@@ -64,7 +64,11 @@ const DeleteCategory = ({
           {openDeleteModal ? (
             <>
               <img src={PopUpImag} alt="..." className="m-auto text-center" />
-              <h4 className="fw-bold my-3">Delete This Item ?</h4>
+              <h4 className="fw-bold my-3">
+                Delete This
+                <sapn className="text-danger mx-1">{updatedCategory.name}</sapn>
+                ?
+              </h4>
               <p className="text-muted">
                 are you sure you want to delete this item ? if you are sure just
                 click on delete it
