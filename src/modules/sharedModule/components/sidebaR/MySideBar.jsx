@@ -15,14 +15,7 @@ const MySideBar = () => {
     const allowedTitles =
       loggedUserInfo?.group?.name === "SystemUser"
         ? ["Home", "Recipes", "WishList"]
-        : [
-            "Home",
-            "Recipes",
-            "Logout",
-            "Users",
-            "Categories",
-            "Change Password",
-          ];
+        : ["Home", "Recipes", "Users", "Categories", "Change Password"];
 
     return allowedTitles.includes(ele.title) ? "d-block" : "d-none";
   };
