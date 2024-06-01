@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ForgetPass from "./modules/authenticationModule/components/forgetPass/ForgetPass";
@@ -8,18 +8,17 @@ import Register from "./modules/authenticationModule/components/register/Registe
 import ResetPass from "./modules/authenticationModule/components/resetPass/ResetPass";
 import VerifyAccount from "./modules/authenticationModule/components/verifyAccount/VerifyAccount";
 import CategoriesList from "./modules/categories/components/categoriesList/CategoriesList";
-
+import RecipesList from "./modules/recipesModule/components/recipesList/components/recipiesList/RecipesList";
 import AuthLayout from "./modules/sharedModule/components/authLayout/AuthLayout";
 import Dashboard from "./modules/sharedModule/components/dashboard/Dashboard";
 import GuardedRoute from "./modules/sharedModule/components/guardedRoute/GuardedRoute";
 import MasterLayout from "./modules/sharedModule/components/masterLayout/MasterLayout";
 import NotFound from "./modules/sharedModule/components/notFound/NotFound";
-import Userslist from "./modules/usersModule/components/usersList/Userslist";
 import Favorites from "./modules/userPortal/components/favorites/Favorites";
-import RecipesList from "./modules/recipesModule/components/recipesList/components/recipiesList/RecipesList";
+import Userslist from "./modules/usersModule/components/usersList/Userslist";
 
 function App() {
-  const routes = createBrowserRouter([
+  const routes = createHashRouter([
     {
       path: "/",
       element: <AuthLayout />,
