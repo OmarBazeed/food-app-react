@@ -120,7 +120,7 @@ const CategoriesList = () => {
                 <div role="button" className="col col-2">
                   Category Name
                 </div>
-                <div className="col col-3"></div>
+                <div className="col col-3">creationDate</div>
                 <div className="col col-8">Actions</div>
               </li>
             </ul>
@@ -132,16 +132,16 @@ const CategoriesList = () => {
                   );
                   return (
                     <li key={index} className="table-row  ">
-                      <div className="col col-1 " data-label="#">
+                      <div className="col col-1" data-label="#">
                         {index + 1}
                       </div>
-                      <div className="col col-2 " data-label="Category Name :">
+                      <div className="col col-2" data-label="Category Name :">
                         {item.name}
                       </div>
-                      <div className="col col-7 " data-label="Tag :">
+                      <div className="col col-7" data-label="Creation Date :">
                         {date}
                       </div>
-                      <div className="col col-8 " data-label="Actions :">
+                      <div className="col col-8" data-label="Actions :">
                         <div className="btn-group">
                           {window.innerWidth < 650 ? (
                             ""

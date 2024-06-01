@@ -1,7 +1,5 @@
-/* eslint-disable no-const-assign */
 import { useContext, useEffect, useState } from "react";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
-import { useNavigate } from "react-router-dom";
 import sideLogo from "../../../../assets/imgs/sideLogo.png";
 import { AuthContext } from "../../../../context/AuthContext";
 import { sidebarContent } from "../../../../utils";
@@ -10,8 +8,8 @@ import ChangePass from "../../../authenticationModule/components/changePass/Chan
 const MySideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [openChangeModal, setOpenChangeModal] = useState(false);
-  const navigate = useNavigate();
   const { loggedUserInfo } = useContext(AuthContext);
+  const [activeItem, setActiveItem] = useState("");
 
   const showingSidebarElements = (ele) => {
     const allowedTitles =
@@ -27,19 +25,6 @@ const MySideBar = () => {
           ];
 
     return allowedTitles.includes(ele.title) ? "d-block" : "d-none";
-  };
-
-  const handleLogOut = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
-  const clickingOnSidebarElements = (ele) => {
-    if (ele.title == "Logout") {
-      handleLogOut();
-    } else if (ele.title == "Change Password") {
-      setOpenChangeModal(true);
-    }
   };
 
   useEffect(() => {
@@ -77,13 +62,16 @@ const MySideBar = () => {
             />
 
             {sidebarContent?.map((ele) => {
+              const isActive = activeItem === ele.title; // Check if item is active
               return (
                 <MenuItem
                   key={ele.id}
                   component={ele.path}
                   icon={ele.icon}
-                  className={showingSidebarElements(ele)}
-                  onClick={() => clickingOnSidebarElements(ele)}
+                  className={`${showingSidebarElements(ele)} ${
+                    isActive ? "activeMenuItem" : ""
+                  }`}
+                  onClick={() => setActiveItem(ele.title)}
                 >
                   {ele.title}
                 </MenuItem>

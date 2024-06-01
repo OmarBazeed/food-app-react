@@ -97,6 +97,7 @@
         content: attr(data-label);
         flex-basis: 50%;
         font-size: 15px;
+        margin-right: 5px;
       }
     }
   }

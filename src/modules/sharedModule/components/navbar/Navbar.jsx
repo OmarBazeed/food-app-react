@@ -1,14 +1,9 @@
-/* eslint-disable no-unused-vars */
-import avatar from "../../../../assets/imgs/avatar.png";
-import { useContext, useEffect, useRef, useState } from "react";
-import { AuthContext } from "../../../../context/AuthContext";
 import {
-  Box,
   Button,
-  ModalBody,
+  Modal,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
+  ModalHeader,
   ModalOverlay,
   Popover,
   PopoverArrow,
@@ -16,56 +11,100 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverTrigger,
-  useDisclosure,
-  ModalHeader,
-  Modal,
-  TabList,
-  TabPanels,
   Tab,
+  TabList,
   TabPanel,
+  TabPanels,
   Tabs,
+  useDisclosure,
 } from "@chakra-ui/react";
+import axios from "axios";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Bars } from "react-loader-spinner";
+import avatar from "../../../../assets/imgs/avatar.png";
+import { AuthContext } from "../../../../context/AuthContext";
 import { mainURL } from "../../../../utils";
 import { FailToast, SuccessToast } from "../toasts/Toast";
-import axios from "axios";
-import { Bars } from "react-loader-spinner";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import "./Navbar.modules.css";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const { loggedUserInfo, gettingUserData } = useContext(AuthContext);
+  const { loggedUserInfo, RequestAuthorization, gettingUserData } =
+    useContext(AuthContext);
   const [openUprofile, setOpenUprofile] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const finalRef = useRef(null);
-  const [clicked, setClicked] = useState(false);
-  const [showPass, setShowPass] = useState(false);
+  const [clickedProfile, setClickedProfile] = useState(false);
+  const [clickedPassword, setClickedPassword] = useState(false);
   const [showConPass, setShowConPass] = useState(false);
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const finalRef = useRef(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    reset,
+  } = useForm({
+    mode: "onSubmit",
+  });
 
-  const onSubmit = async (data) => {
+  const {
+    register: registerPassword,
+    handleSubmit: handleSubmitPassword,
+    formState: { errors: errorsPassword },
+    reset: resetPassword,
+  } = useForm({
+    mode: "onSubmit",
+  });
+
+  //logging out
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+  //handling update profile
+  const onSubmitProfile = async (data) => {
     const formData = new FormData();
     formData.append("userName", data.userName);
     formData.append("email", data.email);
     formData.append("country", data.country);
     formData.append("phoneNumber", data.phoneNumber);
-    formData.append("password", data.password);
     formData.append("confirmPassword", data.confirmPassword);
     formData.append("profileImage", data.profileImage[0]);
     try {
-      let res = await axios.post(`${mainURL}/Users/Register`, formData);
-      setClicked(true);
-      SuccessToast(res.data.message || "Logged In Successfully");
+      let res = await axios.put(`${mainURL}/Users`, formData, {
+        headers: {
+          ...RequestAuthorization,
+        },
+      });
+      setClickedProfile(true);
+      SuccessToast(res.data.message || "Account Updated Successfully");
       setTimeout(() => {
-        navigate("/verifyAccount");
-      }, 2000);
-      console.log(res);
+        onClose();
+        gettingUserData();
+        setClickedProfile(false);
+      }, 1000);
+    } catch (error) {
+      FailToast(error.response.data.message);
+    }
+  };
+
+  //handling update password
+  const onSubmitPasswordChange = async (data) => {
+    try {
+      let res = await axios.put(`${mainURL}/Users/ChangePassword`, data, {
+        headers: {
+          ...RequestAuthorization,
+        },
+      });
+      setClickedPassword(true);
+      SuccessToast(res.data.message || "Password Changed Successfully");
+      setTimeout(() => {
+        onClose();
+        gettingUserData();
+        setClickedPassword(false);
+      }, 1000);
     } catch (error) {
       FailToast(error.response.data.message);
     }
@@ -74,6 +113,18 @@ const Navbar = () => {
   useEffect(() => {
     gettingUserData();
   }, [gettingUserData]);
+
+  useEffect(() => {
+    const { userName, email, country, phoneNumber } = loggedUserInfo;
+    reset({
+      userName,
+      email,
+      country,
+      phoneNumber,
+    });
+    resetPassword();
+  }, [loggedUserInfo, reset, resetPassword]);
+
   return (
     <>
       {openUprofile && (
@@ -84,15 +135,25 @@ const Navbar = () => {
               <ModalHeader>
                 <Tabs size="md" variant="enclosed">
                   <TabList>
-                    <Tab>Change Info</Tab>
-                    <Tab>Two</Tab>
+                    <Tab>
+                      Account Settings <i className="fa fa-gears ms-2"></i>
+                    </Tab>
+                    <Tab>
+                      Change Password <i className="fa fa-lock ms-2"></i>
+                    </Tab>
                   </TabList>
                   <TabPanels>
                     <TabPanel>
-                      <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
-                        <section className="row mw-100 gap-0 gap-md-5 registerRow">
+                      <h6 className="text-center text-primary">
+                        Change Your Account Information
+                      </h6>
+                      <form
+                        onSubmit={handleSubmit(onSubmitProfile)}
+                        className="mt-4"
+                      >
+                        <section className="row mw-100 gap-0 row-gap-md-2 column-gap-md-5 registerRow">
                           <div className="row flex-column col-md-6">
-                            <div className="input-group formIn my-3 bg-lighter p-2 d-flex align-items-center justify-content-center">
+                            <div className="input-group formInput my-3 bg-lighter p-2 d-flex align-items-center justify-content-center">
                               <input
                                 type="text"
                                 className="form-control bg-transparent border-0 ms-2"
@@ -107,11 +168,11 @@ const Navbar = () => {
                                 {errors.userName.message}
                               </p>
                             )}
-                            <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
+                            <div className="input-group formInput my-3 bg-lighter p-2 d-flex align-items-center justify-content-center">
                               <input
                                 type="text"
                                 className="form-control bg-transparent border-0 ms-2"
-                                placeholder="Enter Your country"
+                                placeholder="Enter Your Country"
                                 {...register("country", {
                                   required: "Country is required",
                                 })}
@@ -122,43 +183,19 @@ const Navbar = () => {
                                 {errors.country.message}
                               </p>
                             )}
-                            <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
-                              <input
-                                type={showPass ? "text" : "password"}
-                                className="form-control bg-transparent border-0 ms-2"
-                                placeholder="Enter Your Password"
-                                {...register("password", {
-                                  required: "Password is required",
-                                })}
-                              />
-                              {showPass && (
-                                <i
-                                  className="fa fa-eye border-0 pointer-event"
-                                  onClick={() => setShowPass(!showPass)}
-                                ></i>
-                              )}
-                              {!showPass && (
-                                <i
-                                  className="fa fa fa-eye-slash border-0 pointer-event"
-                                  onClick={() => setShowPass(!showPass)}
-                                ></i>
-                              )}
-                            </div>
-                            {errors?.password && (
-                              <p className="text-white handleErr fw-bold p-2">
-                                {errors.password.message}
-                              </p>
-                            )}
                           </div>
                           <div className="row flex-column col-md-6">
-                            <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
+                            <div className="input-group formInput my-3 bg-lighter p-2 d-flex align-items-center justify-content-center">
                               <input
                                 type="text"
                                 className="form-control bg-transparent border-0 ms-2"
-                                placeholder="Enter Your email "
+                                placeholder="Enter Your Email"
                                 {...register("email", {
                                   required: "email is required",
-                                  pattern: /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/gi,
+                                  pattern: {
+                                    value: /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/gi,
+                                    message: "Invalid email format",
+                                  },
                                 })}
                               />
                             </div>
@@ -167,11 +204,11 @@ const Navbar = () => {
                                 {errors.email.message}
                               </p>
                             )}
-                            <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
+                            <div className="input-group formInput my-3 bg-lighter p-2 d-flex align-items-center justify-content-center">
                               <input
                                 type="number"
                                 className="form-control bg-transparent border-0 ms-2"
-                                placeholder="Enter Your phoneNumber "
+                                placeholder="Your Phone Number"
                                 {...register("phoneNumber", {
                                   required: "phoneNumber is required",
                                 })}
@@ -182,7 +219,9 @@ const Navbar = () => {
                                 {errors.phoneNumber.message}
                               </p>
                             )}
-                            <div className="input-group formIn my-3 bg-lighter p-2 d-flex  align-items-center justify-content-center">
+                          </div>
+                          <div className="p-0">
+                            <div className="input-group formInput my-3 bg-lighter d-flex align-items-center justify-content-center">
                               <input
                                 type={showConPass ? "text" : "password"}
                                 className="form-control bg-transparent border-0 ms-2"
@@ -191,15 +230,14 @@ const Navbar = () => {
                                   required: "Confirm Password is required",
                                 })}
                               />
-                              {showConPass && (
+                              {showConPass ? (
                                 <i
                                   className="fa fa-eye border-0 pointer-event"
                                   onClick={() => setShowConPass(!showConPass)}
                                 ></i>
-                              )}
-                              {!showConPass && (
+                              ) : (
                                 <i
-                                  className="fa fa fa-eye-slash border-0 pointer-event"
+                                  className="fa fa-eye-slash border-0 pointer-event"
                                   onClick={() => setShowConPass(!showConPass)}
                                 ></i>
                               )}
@@ -221,13 +259,13 @@ const Navbar = () => {
                           <div className="mt-4 d-flex justify-content-center">
                             <button
                               className={
-                                clicked
+                                clickedProfile
                                   ? "btn btn-transparent w-75 fw-bold submitBtn"
-                                  : "btn btn-success w-75 fw-bold submitBtn"
+                                  : "btn btn-outline-primary w-75 fw-bold submitBtn"
                               }
                               type="submit"
                             >
-                              {clicked == true ? (
+                              {clickedProfile ? (
                                 <Bars
                                   height="40"
                                   width="40"
@@ -238,15 +276,132 @@ const Navbar = () => {
                                   visible={true}
                                 />
                               ) : (
-                                "Register"
+                                "Update"
                               )}
                             </button>
                           </div>
                         </div>
                       </form>
                     </TabPanel>
+                    {/*cahnge password tab */}
                     <TabPanel>
-                      <p>two!</p>
+                      <h6 className="text-center text-primary">
+                        Change Your Password
+                      </h6>
+                      <form
+                        onSubmit={handleSubmitPassword(onSubmitPasswordChange)}
+                        className="mt-4"
+                      >
+                        <section className="row mw-100 gap-0 row-gap-md-2 column-gap-md-5 registerRow">
+                          <div className="p-0">
+                            <div className="input-group formInput my-3 bg-lighter d-flex align-items-center justify-content-center">
+                              <input
+                                type={showConPass ? "text" : "password"}
+                                className="form-control bg-transparent border-0 ms-2"
+                                placeholder="Your Old Password"
+                                {...registerPassword("oldPassword", {
+                                  required: "Old Password is required",
+                                })}
+                              />
+                              {showConPass ? (
+                                <i
+                                  className="fa fa-eye border-0 pointer-event"
+                                  onClick={() => setShowConPass(!showConPass)}
+                                ></i>
+                              ) : (
+                                <i
+                                  className="fa fa-eye-slash border-0 pointer-event"
+                                  onClick={() => setShowConPass(!showConPass)}
+                                ></i>
+                              )}
+                            </div>
+                            {errorsPassword?.oldPassword && (
+                              <p className="text-white handleErr fw-bold p-2">
+                                {errorsPassword.oldPassword.message}
+                              </p>
+                            )}
+                            <div className="input-group formInput my-3 bg-lighter d-flex align-items-center justify-content-center">
+                              <input
+                                type={showConPass ? "text" : "password"}
+                                className="form-control bg-transparent border-0 ms-2"
+                                placeholder="Your New Password"
+                                {...registerPassword("newPassword", {
+                                  required: "New Password is required",
+                                })}
+                              />
+                              {showConPass ? (
+                                <i
+                                  className="fa fa-eye border-0 pointer-event"
+                                  onClick={() => setShowConPass(!showConPass)}
+                                ></i>
+                              ) : (
+                                <i
+                                  className="fa fa-eye-slash border-0 pointer-event"
+                                  onClick={() => setShowConPass(!showConPass)}
+                                ></i>
+                              )}
+                            </div>
+                            {errorsPassword?.newPassword && (
+                              <p className="text-white handleErr fw-bold p-2">
+                                {errorsPassword.newPassword.message}
+                              </p>
+                            )}
+                            <div className="input-group formInput my-3 bg-lighter d-flex align-items-center justify-content-center">
+                              <input
+                                type={showConPass ? "text" : "password"}
+                                className="form-control bg-transparent border-0 ms-2"
+                                placeholder="Confirm Your Password"
+                                {...registerPassword("confirmNewPassword", {
+                                  required: "Confirm New Password is required",
+                                })}
+                              />
+                              {showConPass ? (
+                                <i
+                                  className="fa fa-eye border-0 pointer-event"
+                                  onClick={() => setShowConPass(!showConPass)}
+                                ></i>
+                              ) : (
+                                <i
+                                  className="fa fa-eye-slash border-0 pointer-event"
+                                  onClick={() => setShowConPass(!showConPass)}
+                                ></i>
+                              )}
+                            </div>
+                            {errorsPassword?.confirmNewPassword && (
+                              <p className="text-white handleErr fw-bold p-2">
+                                {errorsPassword.confirmNewPassword.message}
+                              </p>
+                            )}
+                          </div>
+                        </section>
+
+                        <div className="mt-3">
+                          <div className="mt-4 d-flex justify-content-center">
+                            <button
+                              className={
+                                clickedPassword
+                                  ? "btn btn-transparent w-75 fw-bold submitBtn"
+                                  : "btn btn-outline-primary w-75 fw-bold submitBtn"
+                              }
+                              type="submit"
+                            >
+                              {clickedPassword ? (
+                                <Bars
+                                  height="40"
+                                  width="40"
+                                  color="#4fa94d"
+                                  ariaLabel="bars-loading"
+                                  wrapperStyle={{}}
+                                  wrapperClass=""
+                                  visible={true}
+                                />
+                              ) : (
+                                "Change"
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </form>
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
@@ -256,6 +411,7 @@ const Navbar = () => {
           </Modal>
         </>
       )}
+
       <nav className="navbar navbar-expand-lg bg-light w-100 ms-3 pe-2">
         <div className="container-fluid gap-3">
           <button
@@ -299,9 +455,9 @@ const Navbar = () => {
                         <span className="fw-bold text-capitalize">
                           {loggedUserInfo?.userName}
                         </span>
-                        <spn>
+                        <span>
                           <i className="fa-solid fa-angle-down"></i>
-                        </spn>
+                        </span>
                       </div>
                     </Button>
                   </PopoverTrigger>
@@ -322,7 +478,11 @@ const Navbar = () => {
                       >
                         Profile
                       </Button>
-                      <Button variant="ghost" colorScheme="red">
+                      <Button
+                        variant="ghost"
+                        colorScheme="red"
+                        onClick={() => handleLogOut()}
+                      >
                         Logout
                       </Button>
                     </PopoverBody>

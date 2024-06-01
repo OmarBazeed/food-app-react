@@ -254,3 +254,6 @@ matserLayout
   padding: 2px;
   transition: all 0.5s;
 }
+.activeMenuItem {
+  background-color: rgb(0 67 49) !important ;
+}
