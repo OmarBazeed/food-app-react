@@ -14,7 +14,7 @@ const MySideBar = () => {
   const showingSidebarElements = (ele) => {
     const allowedTitles =
       loggedUserInfo?.group?.name === "SystemUser"
-        ? ["Home", "Recipes", "Logout", "WishList"]
+        ? ["Home", "Recipes", "WishList"]
         : [
             "Home",
             "Recipes",
