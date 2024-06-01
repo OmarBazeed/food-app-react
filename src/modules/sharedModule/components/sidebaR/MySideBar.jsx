@@ -3,19 +3,17 @@ import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import sideLogo from "../../../../assets/imgs/sideLogo.png";
 import { AuthContext } from "../../../../context/AuthContext";
 import { sidebarContent } from "../../../../utils";
-import ChangePass from "../../../authenticationModule/components/changePass/ChangePass";
 
 const MySideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [openChangeModal, setOpenChangeModal] = useState(false);
   const { loggedUserInfo } = useContext(AuthContext);
-  const [activeItem, setActiveItem] = useState("");
+  const [activeItem, setActiveItem] = useState("Home");
 
   const showingSidebarElements = (ele) => {
     const allowedTitles =
       loggedUserInfo?.group?.name === "SystemUser"
         ? ["Home", "Recipes", "WishList"]
-        : ["Home", "Recipes", "Users", "Categories", "Change Password"];
+        : ["Home", "Recipes", "Users", "Categories"];
 
     return allowedTitles.includes(ele.title) ? "d-block" : "d-none";
   };
@@ -38,13 +36,6 @@ const MySideBar = () => {
 
   return (
     <>
-      {openChangeModal && (
-        <ChangePass
-          openChangeModal={openChangeModal}
-          setOpenChangeModal={setOpenChangeModal}
-        />
-      )}
-
       <div className="sidebar-content">
         <Sidebar collapsed={collapsed}>
           <Menu>
