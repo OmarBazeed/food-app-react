@@ -68,6 +68,7 @@ const Login = () => {
                     required: "Email is required",
                     pattern: /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/i,
                   })}
+                  defaultValue={"omarbazeed@gmail.com"}
                 />
               </div>
               {errors?.email && (
@@ -84,6 +85,7 @@ const Login = () => {
                   {...register("password", {
                     required: "Password is required",
                   })}
+                  defaultValue={"Omar010@"}
                 />
                 {showPass && (
                   <i
